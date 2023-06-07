@@ -15,15 +15,20 @@ const Statistics = (props) => {
   const positiveText = 'positive'
   
   
-  return (
-    <>
-      <Counter text={goodText} amount={props.good} mark="" />
-      <Counter text={neutralText} amount={props.neutral} mark="" />
-      <Counter text={badText} amount={props.bad} mark="" />
-      <Counter text={averageText} amount={(props.good-props.bad)/total} mark="" />
-      <Counter text={positiveText} amount={props.good/total} mark=" %" />
-    </>
-  )
+  if(total > 0) {
+    return (
+      <>
+        <Counter text={goodText} amount={props.good} mark="" />
+        <Counter text={neutralText} amount={props.neutral} mark="" />
+        <Counter text={badText} amount={props.bad} mark="" />
+        <Counter text={averageText} amount={(props.good-props.bad)/total} mark="" />
+        <Counter text={positiveText} amount={props.good/total*100} mark=" %" />
+      </>
+    )
+  }
+  else {
+    return <p>No feedback given</p>
+  }
 
 }
 
