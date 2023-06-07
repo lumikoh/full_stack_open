@@ -4,7 +4,7 @@ This repository holds my answers to excercises for the course [Full Stack Open](
 The course consists of the following parts, the completed parts are marked with ☑:
 
 - [x] Part  0: Fundamentals of Web apps
-- [ ] Part  1: Introduction to React
+- [x] Part  1: Introduction to React
 - [ ] Part  2: Communicating with server
 - [ ] Part  3: Programming a server with NodeJS and Express
 - [ ] Part  4: Testing Express servers, user administration
