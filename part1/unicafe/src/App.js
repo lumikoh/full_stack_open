@@ -1,24 +1,17 @@
 import { useState } from 'react'
 
-const Header = (props) => {
-  return (
-    <h1>{props.text}</h1>
-  )
-}
+const Header = ({text}) => <h1>{text}</h1>
 
-const Counter = (props) => {
-  return (
-    <p>{props.text}: {props.amount}</p>
-  )
-}
 
-const Button = (props) => {
-  return (
-    <button onClick={props.handleClick}>
-      {props.text}
-    </button>
-  )
-}
+const Counter = ({text, amount}) => <p>{text}: {amount}</p>
+
+
+const Button = ({handleClick, text}) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
 
 const App = () => {
 
@@ -42,7 +35,8 @@ const App = () => {
       <Counter text={goodText} amount={good} />
       <Counter text={neutralText} amount={neutral} />
       <Counter text={badText} amount={bad} />
-
+      <Counter text={'average'} amount={(good-bad)/(good+bad+neutral)} />
+      <p>positive: {good/(good+bad+neutral)} %</p>
     </div>
   )
 }
