@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Header = ({text}) => <h1>{text}</h1>
 
 
-const Counter = ({text, amount, mark}) => <p>{text}: {amount}{mark}</p>
+const StatisticsLine = ({text, value, mark}) => <p>{text}: {value}{mark}</p>
 
 
 const Statistics = (props) => {
@@ -17,13 +17,13 @@ const Statistics = (props) => {
   
   if(total > 0) {
     return (
-      <>
-        <Counter text={goodText} amount={props.good} mark="" />
-        <Counter text={neutralText} amount={props.neutral} mark="" />
-        <Counter text={badText} amount={props.bad} mark="" />
-        <Counter text={averageText} amount={(props.good-props.bad)/total} mark="" />
-        <Counter text={positiveText} amount={props.good/total*100} mark=" %" />
-      </>
+      <div>
+        <StatisticsLine text={goodText} value={props.good} mark="" />
+        <StatisticsLine text={neutralText} value={props.neutral} mark="" />
+        <StatisticsLine text={badText} value={props.bad} mark="" />
+        <StatisticsLine text={averageText} value={(props.good-props.bad)/total} mark="" />
+        <StatisticsLine text={positiveText} value={props.good/total*100} mark=" %" />
+      </div>
     )
   }
   else {
