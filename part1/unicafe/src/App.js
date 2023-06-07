@@ -3,8 +3,29 @@ import { useState } from 'react'
 const Header = ({text}) => <h1>{text}</h1>
 
 
-const Counter = ({text, amount}) => <p>{text}: {amount}</p>
+const Counter = ({text, amount, mark}) => <p>{text}: {amount}{mark}</p>
 
+
+const Statistics = (props) => {
+  const total = props.good + props.bad + props.neutral
+  const goodText = 'good'
+  const badText = 'bad'
+  const neutralText = 'neutral'
+  const averageText = 'average'
+  const positiveText = 'positive'
+  
+  
+  return (
+    <>
+      <Counter text={goodText} amount={props.good} mark="" />
+      <Counter text={neutralText} amount={props.neutral} mark="" />
+      <Counter text={badText} amount={props.bad} mark="" />
+      <Counter text={averageText} amount={(props.good-props.bad)/total} mark="" />
+      <Counter text={positiveText} amount={props.good/total} mark=" %" />
+    </>
+  )
+
+}
 
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
@@ -32,11 +53,7 @@ const App = () => {
       <Button text={neutralText} handleClick={() => setNeutral(neutral + 1)} />
       <Button text={badText} handleClick={() => setBad(bad + 1)} />
       <Header text = {statisticText} />
-      <Counter text={goodText} amount={good} />
-      <Counter text={neutralText} amount={neutral} />
-      <Counter text={badText} amount={bad} />
-      <Counter text={'average'} amount={(good-bad)/(good+bad+neutral)} />
-      <p>positive: {good/(good+bad+neutral)} %</p>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
