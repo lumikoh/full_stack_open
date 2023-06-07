@@ -17,11 +17,25 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint32Array(anecdotes.length))
+  const [best, setBest] = useState(0)
+
+  const setPointStats = () => {
+    const copy = {...points}
+    copy[selected] += 1
+    setPoints(copy)
+    if(copy[selected] > copy[best]) {
+      setBest(selected)
+    }
+  }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {points[selected]} points</p>
       <Button text='next anecdote' handleClick={() => setSelected(Math.floor(Math.random()*anecdotes.length))} />
+      <Button text='vote' handleClick={setPointStats} />
+      <p>{anecdotes[best]}</p>
     </div>
   )
 }
