@@ -27,6 +27,16 @@ const App = () => {
   const [points, setPoints] = useState(new Uint32Array(anecdotes.length))
   const [best, setBest] = useState(0)
 
+  const generateRandom = () => {
+    while(true) {
+      const newValue = Math.floor(Math.random()*anecdotes.length)
+      if(newValue != selected) {
+        setSelected(newValue)
+        break;
+      }
+    }
+  }
+
   const setPointStats = () => {
     const copy = {...points}
     copy[selected] += 1
@@ -42,7 +52,7 @@ const App = () => {
       <p>
         <Content text={anecdotes[selected]} points={points[selected]} />
         <Button text='vote' handleClick={setPointStats} />
-        <Button text='next anecdote' handleClick={() => setSelected(Math.floor(Math.random()*anecdotes.length))} />
+        <Button text='next anecdote' handleClick={generateRandom} />
       </p>
       <h1>Anecdote with most votes</h1>
       <p>
