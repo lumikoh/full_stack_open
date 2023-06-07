@@ -3,7 +3,13 @@ import { useState } from 'react'
 const Header = ({text}) => <h1>{text}</h1>
 
 
-const StatisticsLine = ({text, value, mark}) => <p>{text}: {value}{mark}</p>
+const StatisticsLine = ({text, value, mark}) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+
+)
 
 
 const Statistics = (props) => {
@@ -13,17 +19,21 @@ const Statistics = (props) => {
   const neutralText = 'neutral'
   const averageText = 'average'
   const positiveText = 'positive'
+  const allText = 'all'
   
   
   if(total > 0) {
     return (
-      <div>
-        <StatisticsLine text={goodText} value={props.good} mark="" />
-        <StatisticsLine text={neutralText} value={props.neutral} mark="" />
-        <StatisticsLine text={badText} value={props.bad} mark="" />
-        <StatisticsLine text={averageText} value={(props.good-props.bad)/total} mark="" />
-        <StatisticsLine text={positiveText} value={props.good/total*100} mark=" %" />
-      </div>
+      <table>
+        <tbody>
+          <StatisticsLine text={goodText} value={props.good} />
+          <StatisticsLine text={neutralText} value={props.neutral} />
+          <StatisticsLine text={badText} value={props.bad} />
+          <StatisticsLine text={allText} value={total} />
+          <StatisticsLine text={averageText} value={((props.good-props.bad)/total).toFixed(1)}/>
+          <StatisticsLine text={positiveText} value={(props.good/total*100).toFixed(1) + " %"} />
+        </tbody>
+      </table>
     )
   }
   else {
