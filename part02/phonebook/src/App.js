@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -25,7 +28,9 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat({name: newName, number: newNumber}))
+    setPersons(persons.concat({name: newName, 
+                               number: newNumber, 
+                               id: persons.length+1}))
     setNewName('')
     setNewNumber('')
 
@@ -46,37 +51,30 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with
-        <input
-        value={filter}
-        onChange={handleFilterChange}></input>
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addNumber}>
-        <div> name: 
-          <input 
-          value={newName}
-          onChange={handleNameChange} />
-        </div>
-        <div>number: 
-          <input 
-          value={newNumber}
-          onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <table>
-        <tbody>
-        {persons.filter(person => 
-                        (filter === '' ||
-                         person.name.toLowerCase()
-                                    .includes( filter.toLowerCase()) ) )
-                .map(person => <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)}
-        </tbody>  
-      </table>
+
+      <Filter 
+      value={filter} 
+      change={handleFilterChange}
+      />
+
+      <h3>add a new</h3>
+
+      <PersonForm 
+      onFormSubmit={addNumber}
+      name={newName}
+      onNameChange={handleNameChange}
+      number={newNumber}
+      onNumberChange={handleNumberChange}
+      />
+
+      <h3>Numbers</h3>
+
+      <Persons 
+      persons={persons} 
+      filter={filter} 
+      />
+
+
     </div>
   )
 }
