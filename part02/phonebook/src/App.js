@@ -10,6 +10,7 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   function isNameKnown(person) {
     return person.name === newName
@@ -18,7 +19,7 @@ const App = () => {
   const addNumber = (event) => {
     event.preventDefault()
     if(newName === '') return
-    
+
     if(persons.find(isNameKnown) !== undefined) {
       alert(`${newName} is already added to phonebook`)
       return
@@ -38,9 +39,19 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>filter shown with
+        <input
+        value={filter}
+        onChange={handleFilterChange}></input>
+      </div>
+      <h2>add a new</h2>
       <form onSubmit={addNumber}>
         <div> name: 
           <input 
@@ -59,7 +70,11 @@ const App = () => {
       <h2>Numbers</h2>
       <table>
         <tbody>
-        {persons.map(person => <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)}
+        {persons.filter(person => 
+                        (filter === '' ||
+                         person.name.toLowerCase()
+                                    .includes( filter.toLowerCase()) ) )
+                .map(person => <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)}
         </tbody>  
       </table>
     </div>
