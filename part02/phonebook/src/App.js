@@ -10,9 +10,10 @@ const App = () => {
     const [persons, setPersons] = useState([]);
 
     useEffect(() => {
-        PersonService.getAll().then( data => 
-            setPersons(persons.concat(data)))
-        
+        if(persons.length === 0) {
+            PersonService.getAll().then( data => 
+                setPersons(persons.concat(data)))
+        }
     }, []);
 
     const [newName, setNewName] = useState("");
@@ -26,9 +27,27 @@ const App = () => {
     const addNumber = (event) => {
         event.preventDefault();
         if (newName === "") return;
+        const existingPerson = persons.find(isNameKnown)
+        if (existingPerson !== undefined) {
+            if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                
+                const newPerson = {
+                    name: existingPerson.name,
+                    number: newNumber,
+                    id: existingPerson.id
+                }
+                setNewName("");
+                setNewNumber("");
 
-        if (persons.find(isNameKnown) !== undefined) {
-            alert(`${newName} is already added to phonebook`);
+                PersonService.update(existingPerson.id,newPerson).then( response => {
+                    const newPersons = persons.map( (x) => x)
+                    const index = persons.indexOf(existingPerson)
+                    newPersons[index].number=newPerson.number
+                    setPersons(newPersons)
+
+                })
+
+            }
             return;
         }
 
