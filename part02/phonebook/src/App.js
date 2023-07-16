@@ -1,85 +1,87 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import Persons from './components/Persons'
-import PersonForm from './components/PersonForm'
-import Filter from './components/Filter'
+/* eslint-disable react/react-in-jsx-scope */
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+    const [persons, setPersons] = useState([]);
 
-  useEffect( () => {
-    axios.get('http://localhost:3001/persons')
-         .then(response => {
-          setPersons(persons.concat(response.data))
-         })
-  }, [])
+    useEffect(() => {
+        if(persons.length === 0 ) {
+            axios.get("http://localhost:3001/persons").then((response) => {
+                setPersons(persons.concat(response.data));
+            });
+        }
+    }, []);
 
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-  const [filter, setFilter] = useState('')
+    const [newName, setNewName] = useState("");
+    const [newNumber, setNewNumber] = useState("");
+    const [filter, setFilter] = useState("");
 
-  function isNameKnown(person) {
-    return person.name === newName
-  }
-
-  const addNumber = (event) => {
-    event.preventDefault()
-    if(newName === '') return
-
-    if(persons.find(isNameKnown) !== undefined) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    function isNameKnown(person) {
+        return person.name === newName;
     }
 
-    setPersons(persons.concat({name: newName, 
-                               number: newNumber, 
-                               id: persons.length+1}))
-    setNewName('')
-    setNewNumber('')
+    const addNumber = (event) => {
+        event.preventDefault();
+        if (newName === "") return;
 
-  }
+        if (persons.find(isNameKnown) !== undefined) {
+            alert(`${newName} is already added to phonebook`);
+            return;
+        }
 
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  }
+        const newPerson = {
+            name: newName,
+            number: newNumber,
+            id: persons.length + 1,
+        }
 
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
+        setPersons(
+            persons.concat(newPerson)
+        );
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
+        axios.post(`http://localhost:3001/persons`,newPerson)
 
-  return (
-    <div>
-      <h2>Phonebook</h2>
+        setNewName("");
+        setNewNumber("");
+    };
 
-      <Filter 
-      value={filter} 
-      change={handleFilterChange}
-      />
+    const handleNameChange = (event) => {
+        setNewName(event.target.value);
+    };
 
-      <h3>add a new</h3>
+    const handleNumberChange = (event) => {
+        setNewNumber(event.target.value);
+    };
 
-      <PersonForm 
-      onFormSubmit={addNumber}
-      name={newName}
-      onNameChange={handleNameChange}
-      number={newNumber}
-      onNumberChange={handleNumberChange}
-      />
+    const handleFilterChange = (event) => {
+        setFilter(event.target.value);
+    };
 
-      <h3>Numbers</h3>
+    return (
+        <div>
+            <h2>Phonebook</h2>
 
-      <Persons 
-      persons={persons} 
-      filter={filter} 
-      />
+            <Filter value={filter} change={handleFilterChange} />
 
+            <h3>add a new</h3>
 
-    </div>
-  )
-}
+            <PersonForm
+                onFormSubmit={addNumber}
+                name={newName}
+                onNameChange={handleNameChange}
+                number={newNumber}
+                onNumberChange={handleNumberChange}
+            />
 
-export default App
+            <h3>Numbers</h3>
+
+            <Persons persons={persons} filter={filter} />
+        </div>
+    );
+};
+
+export default App;
