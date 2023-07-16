@@ -4,6 +4,7 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import PersonService from "./components/PersonService";
+import PersonUtils from "./components/PersonUtils";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -34,7 +35,7 @@ const App = () => {
         const newPerson = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1,
+            id: PersonUtils.findFreeId(persons),
         }
 
         PersonService.create(newPerson).then( () => {
@@ -58,6 +59,20 @@ const App = () => {
         setFilter(event.target.value);
     };
 
+    const handleDeleteButton = (event) => {
+        for (const entry of persons) {
+            console.log(event.target.id)
+            if (entry.id.toString() === event.target.id) {
+                if(window.confirm(`Delete ${entry.name}?`)) {
+                    PersonService.removeId(entry.id).then( () => {
+                        setPersons(persons.toSpliced(persons.indexOf(entry),1))
+                    })
+                }
+                break
+            }
+        }
+    }
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -76,7 +91,7 @@ const App = () => {
 
             <h3>Numbers</h3>
 
-            <Persons persons={persons} filter={filter} />
+            <Persons persons={persons} filter={filter} onPress={handleDeleteButton} />
         </div>
     );
 };

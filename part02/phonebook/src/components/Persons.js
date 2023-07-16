@@ -1,11 +1,12 @@
-const Person = ({ name, number }) => (
+const Person = ({ name, number, onPress, id }) => (
     <tr>
         <td>{name}</td>
         <td>{number}</td>
+        <td><button onClick={onPress} id={id}>delete</button></td>
     </tr>
 );
 
-const Persons = ({ persons, filter }) => (
+const Persons = ({ persons, filter, onPress }) => (
     <table>
         <tbody>
             {persons
@@ -19,6 +20,8 @@ const Persons = ({ persons, filter }) => (
                         key={person.id}
                         name={person.name}
                         number={person.number}
+                        onPress={onPress}
+                        id={person.id}
                     />
                 ))}
         </tbody>
