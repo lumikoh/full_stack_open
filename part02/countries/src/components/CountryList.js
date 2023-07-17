@@ -17,7 +17,7 @@ const Country = ({data}) => (
 )
 
 
-const CountryList = ({countries, filter}) => {
+const CountryList = ({countries, filter, onPress, selected}) => {
 
     if(!countries) {
         return (
@@ -25,6 +25,14 @@ const CountryList = ({countries, filter}) => {
             Fetching data...
         </div>
         )
+    }
+
+    if(selected) {
+        for(const country of countries) {
+            if(country.cca3 === selected) {
+                return <Country data={country} />
+            }
+        }
     }
 
     const filtered = countries.filter(
@@ -47,7 +55,10 @@ const CountryList = ({countries, filter}) => {
     return (
         <div>
             {filtered.map( (country) => (
-                <div key={country.cca3}>{country.name.common} </div>
+                <div key={country.cca3}>
+                    {country.name.common} 
+                    <button onClick={onPress} id={country.cca3}>show</button>
+                </div>
             ))}
         </div>
     
