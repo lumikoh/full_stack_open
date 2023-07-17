@@ -5,6 +5,7 @@ import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import PersonService from "./components/PersonService";
 import PersonUtils from "./components/PersonUtils";
+import Message from "./components/Message";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -19,6 +20,7 @@ const App = () => {
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [filter, setFilter] = useState("");
+    const [message, setMessage] = useState(null);
 
     function isNameKnown(person) {
         return person.name === newName;
@@ -59,6 +61,10 @@ const App = () => {
 
         PersonService.create(newPerson).then( () => {
             setPersons(persons.concat(newPerson))
+            setMessage(`Added ${newPerson.name}`)
+            setTimeout(() => {
+                setMessage(null)
+            }, 3000)
             }
         )
 
@@ -95,6 +101,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+
+            <Message message={message}/>
 
             <Filter value={filter} change={handleFilterChange} />
 
