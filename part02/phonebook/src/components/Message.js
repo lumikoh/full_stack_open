@@ -3,8 +3,8 @@ const Message = ({message}) => {
         return null
     }
     return (
-        <div className="message">
-            {message}
+        <div className={message.type}>
+            {message.content}
         </div>
     )
 }

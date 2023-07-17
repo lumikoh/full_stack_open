@@ -41,7 +41,7 @@ const App = () => {
                 setNewName("");
                 setNewNumber("");
 
-                PersonService.update(existingPerson.id,newPerson).then( response => {
+                PersonService.update(existingPerson.id,newPerson).then( () => {
                     const newPersons = persons.map( (x) => x)
                     const index = persons.indexOf(existingPerson)
                     newPersons[index].number=newPerson.number
@@ -61,7 +61,10 @@ const App = () => {
 
         PersonService.create(newPerson).then( () => {
             setPersons(persons.concat(newPerson))
-            setMessage(`Added ${newPerson.name}`)
+            setMessage({
+                content: `Added ${newPerson.name}`,
+                type: "message"
+            })
             setTimeout(() => {
                 setMessage(null)
             }, 3000)
@@ -86,11 +89,19 @@ const App = () => {
 
     const handleDeleteButton = (event) => {
         for (const entry of persons) {
-            console.log(event.target.id)
             if (entry.id.toString() === event.target.id) {
                 if(window.confirm(`Delete ${entry.name}?`)) {
                     PersonService.removeId(entry.id).then( () => {
                         setPersons(persons.toSpliced(persons.indexOf(entry),1))
+                    }).catch( () => {
+                        setMessage({
+                            content: `Information of ${entry.name} has already been removed from server`,
+                            type: "error"
+                        })
+                        setPersons(persons.toSpliced(persons.indexOf(entry),1))
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 3000)
                     })
                 }
                 break
