@@ -135,3 +135,4 @@ notes.txt
 part02/phonebook/db.json
 .vscode/
 .eslintrc.js
+build/
