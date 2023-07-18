@@ -1,4 +1,6 @@
-const Country = ({data}) => (
+import Weather from "./Weather"
+
+const Country = ({data, weatherData}) => (
     <div>
         <h2>{data.name.common}</h2>
         <div>
@@ -13,11 +15,12 @@ const Country = ({data}) => (
             <br></br>
             <img src={data.flags.png} alt={"Flag"}></img>
         </div>
+        <Weather data={weatherData} capital={data.capital[0]} />
     </div>
 )
 
 
-const CountryList = ({countries, filter, onPress, selected}) => {
+const CountryList = ({countries, filter, onPress, selected, changeWeather, weatherData}) => {
 
     if(!countries) {
         return (
@@ -30,7 +33,7 @@ const CountryList = ({countries, filter, onPress, selected}) => {
     if(selected) {
         for(const country of countries) {
             if(country.cca3 === selected) {
-                return <Country data={country} />
+                return <Country data={country} weatherData={weatherData} />
             }
         }
     }
@@ -49,7 +52,8 @@ const CountryList = ({countries, filter, onPress, selected}) => {
     }
 
     if(filtered.length === 1) {
-        return <Country data={filtered[0]}/>
+        changeWeather(filtered[0].capital[0])
+        return <Country data={filtered[0]} weatherData={weatherData}/>
     }
 
     return (
