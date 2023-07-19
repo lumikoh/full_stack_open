@@ -2,13 +2,13 @@ const express = require("express");
 const morgan = require("morgan")
 const app = express();
 const cors = require('cors')
+require('dotenv').config()
+
+const Person = require('./models/person')
 
 app.use(cors())
-
 app.use(express.json())
-
 app.use(express.static('build'))
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 morgan.token('content', (request, response) => {
@@ -38,12 +38,10 @@ let persons = [
   },
 ];
 
-app.get("/", (request, response) => {
-  response.send("<h1>Hello World!</h1>");
-});
-
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -71,6 +69,7 @@ const generateId = () => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body
+  
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: 'content missing'
@@ -101,7 +100,8 @@ app.get("/info", (request, response) => {
   );
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
