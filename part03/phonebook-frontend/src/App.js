@@ -47,9 +47,17 @@ const App = () => {
                     newPersons[index].number=newPerson.number
                     setPersons(newPersons)
 
-                })
+                }).catch(error => {
+                    setMessage({
+                        content: error.response.data.error,
+                        type: "error"
+                    })
+                    setTimeout(() => {
+                        setMessage(null)
+                    }, 3000)
+                }
 
-            }
+            )}
             return;
         }
 
@@ -70,6 +78,15 @@ const App = () => {
             }, 3000)
             }
         )
+        .catch(error => {
+            setMessage({
+                content: error.response.data.error,
+                type: "error"
+            })
+            setTimeout(() => {
+                setMessage(null)
+            }, 3000)
+        })
 
         setNewName("");
         setNewNumber("");
