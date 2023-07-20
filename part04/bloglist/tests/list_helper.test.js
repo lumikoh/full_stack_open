@@ -70,7 +70,6 @@ test('dummy returns one', () => {
 })
 
 describe('total likes', () => {
-
   test('of empty list is zero', () => {
     const result = listHelper.totalLikes(zeroBlogs)
     expect(result).toBe(0)
@@ -88,7 +87,6 @@ describe('total likes', () => {
 })
 
 describe('favourite blog', () => {
-
   test('of empty list returns empty object', () => {
     const result = listHelper.favouriteBlog(zeroBlogs)
     expect(result).toEqual({})
@@ -102,5 +100,28 @@ describe('favourite blog', () => {
   test('of list of blogs returns the most liked', () => {
     const result = listHelper.favouriteBlog(blogs)
     expect(result).toEqual(blogs[2])
+  })
+})
+
+describe('most blogs', () => {
+  test('of empty list returns empty object', () => {
+    const result = listHelper.mostBlogs(zeroBlogs)
+    expect(result).toEqual({})
+  })
+
+  test('of list of one blog returns the author with one blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1,
+    })
+  })
+
+  test('of list of blogs returns the author with most blogs', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
+    })
   })
 })
