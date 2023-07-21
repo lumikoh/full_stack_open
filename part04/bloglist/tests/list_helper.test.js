@@ -11,7 +11,7 @@ const listWithOneBlog = [
   },
 ]
 
-const blogs = [
+const listWithManyBlogs = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -62,16 +62,16 @@ const blogs = [
   },
 ]
 
-const zeroBlogs = []
+const listWithZeroBlogs = []
 
 test('dummy returns one', () => {
-  const result = listHelper.dummy(zeroBlogs)
+  const result = listHelper.dummy()
   expect(result).toBe(1)
 })
 
 describe('total likes', () => {
   test('of empty list is zero', () => {
-    const result = listHelper.totalLikes(zeroBlogs)
+    const result = listHelper.totalLikes(listWithZeroBlogs)
     expect(result).toBe(0)
   })
 
@@ -81,14 +81,14 @@ describe('total likes', () => {
   })
 
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.totalLikes(blogs)
+    const result = listHelper.totalLikes(listWithManyBlogs)
     expect(result).toBe(36)
   })
 })
 
 describe('favourite blog', () => {
   test('of empty list returns empty object', () => {
-    const result = listHelper.favouriteBlog(zeroBlogs)
+    const result = listHelper.favouriteBlog(listWithZeroBlogs)
     expect(result).toEqual({})
   })
 
@@ -98,14 +98,14 @@ describe('favourite blog', () => {
   })
 
   test('of list of blogs returns the most liked', () => {
-    const result = listHelper.favouriteBlog(blogs)
-    expect(result).toEqual(blogs[2])
+    const result = listHelper.favouriteBlog(listWithManyBlogs)
+    expect(result).toEqual(listWithManyBlogs[2])
   })
 })
 
 describe('most blogs', () => {
   test('of empty list returns empty object', () => {
-    const result = listHelper.mostBlogs(zeroBlogs)
+    const result = listHelper.mostBlogs(listWithZeroBlogs)
     expect(result).toEqual({})
   })
 
@@ -118,7 +118,7 @@ describe('most blogs', () => {
   })
 
   test('of list of blogs returns the author with most blogs', () => {
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.mostBlogs(listWithManyBlogs)
     expect(result).toEqual({
       author: 'Robert C. Martin',
       blogs: 3,
@@ -128,7 +128,7 @@ describe('most blogs', () => {
 
 describe('most likes', () => {
   test('of empty list returns empty object', () => {
-    const result = listHelper.mostLikes(zeroBlogs)
+    const result = listHelper.mostLikes(listWithZeroBlogs)
     expect(result).toEqual({})
   })
 
@@ -141,7 +141,7 @@ describe('most likes', () => {
   })
 
   test('of list of blogs returns the most liked author', () => {
-    const result = listHelper.mostLikes(blogs)
+    const result = listHelper.mostLikes(listWithManyBlogs)
     expect(result).toEqual({
       author: 'Edsger W. Dijkstra',
       likes: 17,
