@@ -35,6 +35,21 @@ test('each blog has an id parameter', async () => {
   })
 })
 
+test('a new blog is created successfully', async () => {
+  await api
+    .post('/api/blogs')
+    .send(helper.oneBlog[0])
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = await helper.blogsInDb()
+  expect(blogs).toHaveLength(helper.initialBlogs.length+1)
+
+  const ids = blogs.map( blog => blog.id)
+  expect(ids).toContain(helper.oneBlog[0]._id)
+})
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
