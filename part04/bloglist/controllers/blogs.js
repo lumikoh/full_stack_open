@@ -12,7 +12,7 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
 
   const blog = new Blog({
-    _id: request.body._id,
+    _id: request.body.id,
     title: request.body.title,
     author: request.body.author,
     url: request.body.url,
@@ -29,6 +29,21 @@ blogRouter.post('/', async (request, response) => {
 blogRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndDelete(request.params.id)
   response.status(204).end()
+})
+
+blogRouter.put('/:id', async (request, response) => {
+
+  const blog = new Blog({
+    _id: request.params.id,
+    title: request.body.title,
+    author: request.body.author,
+    url: request.body.url,
+    likes: request.body.likes || 0,
+  })
+
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  response.json(updatedBlog)
+
 })
 
 module.exports = blogRouter

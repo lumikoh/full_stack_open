@@ -48,7 +48,7 @@ describe('when there are some blogs initially', () => {
       expect(blogs).toHaveLength(helper.initialBlogs.length+1)
 
       const ids = blogs.map( blog => blog.id)
-      expect(ids).toContain(helper.oneBlog[0]._id)
+      expect(ids).toContain(helper.oneBlog[0].id)
     })
 
     test('is successful without likes parameter', async () => {
@@ -109,6 +109,24 @@ describe('when there are some blogs initially', () => {
       await api
         .delete(`/api/blogs/${helper.unknownId}`)
         .expect(400)
+    })
+  })
+
+  describe('updating a blog', () => {
+    test('is successful with a valid id', async () => {
+      const blogs = await helper.blogsInDb()
+      const changedLikes = blogs[2]
+      changedLikes.likes += 13
+
+      await api
+        .put(`/api/blogs/${changedLikes.id}`)
+        .send(changedLikes)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const resultBlogs = await helper.blogsInDb()
+      const sameBlog = resultBlogs.find( blog => blog.id === changedLikes.id)
+      expect(sameBlog.likes).toBe(changedLikes.likes)
     })
   })
 })
