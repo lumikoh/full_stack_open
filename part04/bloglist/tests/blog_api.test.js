@@ -52,14 +52,37 @@ test('a new blog is created successfully', async () => {
 test('a blog without likes is created successfully', async () => {
   await Blog.deleteMany({})
 
+  const noLikes = helper.oneBlog[0]
+  delete noLikes.likes
+
   await api
     .post('/api/blogs')
-    .send(helper.blogNoLikes[0])
+    .send(noLikes)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
   const blogs = await helper.blogsInDb()
   expect(blogs[0].likes).toBe(0)
+})
+
+test('missing title results in bad request', async () => {
+  const noTitle = helper.oneBlog[0]
+  delete noTitle.title
+
+  await api
+    .post('/api/blogs')
+    .send(noTitle)
+    .expect(400)
+})
+
+test('missing url results in bad request', async () => {
+  const noUrl = helper.oneBlog[0]
+  delete noUrl.url
+
+  await api
+    .post('/api/blogs')
+    .send(noUrl)
+    .expect(400)
 })
 
 

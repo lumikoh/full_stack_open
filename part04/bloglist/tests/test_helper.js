@@ -39,20 +39,11 @@ const oneBlog = [
   }
 ]
 
-const blogNoLikes = [
-  {
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    __v: 0,
-  }
-]
-
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
 }
 
 module.exports = {
-  initialBlogs, oneBlog, blogsInDb, blogNoLikes
+  initialBlogs, oneBlog, blogsInDb
 }
