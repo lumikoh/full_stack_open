@@ -49,6 +49,19 @@ test('a new blog is created successfully', async () => {
   expect(ids).toContain(helper.oneBlog[0]._id)
 })
 
+test('a blog without likes is created successfully', async () => {
+  await Blog.deleteMany({})
+
+  await api
+    .post('/api/blogs')
+    .send(helper.blogNoLikes[0])
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = await helper.blogsInDb()
+  expect(blogs[0].likes).toBe(0)
+})
+
 
 afterAll(async () => {
   await mongoose.connection.close()
