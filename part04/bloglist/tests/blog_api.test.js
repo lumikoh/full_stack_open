@@ -85,6 +85,21 @@ test('missing url results in bad request', async () => {
     .expect(400)
 })
 
+test('deletion of a blog is successful', async () => {
+  const blogs = await helper.blogsInDb()
+  const deletedBlog = blogs[1]
+
+  await api
+    .delete(`/api/blogs/${deletedBlog.id}`)
+    .expect(204)
+
+  const resultBlogs = await helper.blogsInDb()
+  expect(resultBlogs).toHaveLength(blogs.length-1)
+
+  const ids = resultBlogs.map(blog => blog.id)
+  expect(ids).not.toContain(deletedBlog.id)
+})
+
 
 afterAll(async () => {
   await mongoose.connection.close()
