@@ -18,7 +18,8 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const requestLogger = morgan(
-  ':method :url :status :res[content-length] - :response-time ms :content'
+  ':method :url :status :res[content-length] - :response-time ms :content',
+  { skip: () => process.env.NODE_ENV === 'test' }
 )
 
 morgan.token('content', (request) => {

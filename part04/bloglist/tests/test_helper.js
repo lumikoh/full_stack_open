@@ -44,6 +44,8 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const unknownId = '234823848dfklsfafasfaf--'
+
 module.exports = {
-  initialBlogs, oneBlog, blogsInDb
+  initialBlogs, oneBlog, blogsInDb, unknownId
 }
