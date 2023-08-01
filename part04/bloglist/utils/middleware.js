@@ -1,5 +1,6 @@
 const logger = require('./logger')
 const morgan = require('morgan')
+const jwt = require('jsonwebtoken')
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
@@ -13,6 +14,8 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   } else if (error.name === 'JsonWebTokenError') {
+    return response.status(401).json({ error: error.message })
+  } else if (error.name === 'SyntaxError') {
     return response.status(401).json({ error: error.message })
   }
 
@@ -37,9 +40,19 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
+const userExtractor = (request, response, next) => {
+  const decoded = jwt.verify(request.token, process.env.SECRET)
+  if(decoded.id) {
+    request.user = decoded.id
+  }
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 }
