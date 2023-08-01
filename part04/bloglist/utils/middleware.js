@@ -28,8 +28,18 @@ morgan.token('content', (request) => {
   return JSON.stringify(request.body)
 })
 
+const tokenExtractor = (request, response, next) => {
+  const auth = request.get('Authorization')
+  if (auth && auth.startsWith('Bearer ')) {
+    request.token = auth.replace('Bearer ', '')
+  }
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor
 }
