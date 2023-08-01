@@ -39,6 +39,18 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
+
+  const decoded = jwt.verify(request.token, process.env.SECRET)
+  if(!decoded.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const deleted = await Blog.findById(request.params.id)
+
+  if(deleted.user.toString() !== decoded.id.toString()) {
+    return response.status(401).json({ error: 'not authorized to delete'})
+  }
+
   await Blog.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
