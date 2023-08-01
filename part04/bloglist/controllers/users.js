@@ -3,20 +3,24 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.post('/', async (request, response) => {
-  const { username, name, password } = request.body
 
-  if(password.length < 3) {
+  if(!request.body.password) {
+    return response.status(400).json({ error: 'User validation failed: password: Path `password` does not exist.' })
+  }
+
+  if(request.body.password.length < 3) {
     return response.status(400).json({
       error: 'User validation failed: password: Path `password` is shorter than the minimum allowed length (3).'
     })
   }
 
   const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+  const passwordHash = await bcrypt.hash(request.body.password, saltRounds)
 
   const user = new User({
-    username,
-    name,
+    _id: request.body.id,
+    username: request.body.username,
+    name: request.body.name,
     passwordHash
   })
 
