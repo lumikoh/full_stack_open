@@ -158,7 +158,7 @@ describe('when there are some blogs initially', () => {
       expect(ids).not.toContain(deletedBlog.id)
     })
 
-    test("fails with statuscode 400 if blog doesn't exist", async () => {
+    test('fails with statuscode 400 if blog doesn\'t exist', async () => {
       const users = await helper.usersInDb()
       const auth = await helper.getAuth(users[0])
 
