@@ -6,7 +6,6 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-
 beforeEach(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
@@ -15,12 +14,12 @@ beforeEach(async () => {
 
   await user.save()
 
-  const blogObjects = helper.initialBlogs.map(blog => {
+  const blogObjects = helper.initialBlogs.map((blog) => {
     blog.user = user.id
     return new Blog(blog)
   })
 
-  const promiseArray = blogObjects.map(blog => blog.save())
+  const promiseArray = blogObjects.map((blog) => blog.save())
   await Promise.all(promiseArray)
 })
 
@@ -41,24 +40,31 @@ describe('when there are some blogs initially', () => {
   test('each blog has an id parameter', async () => {
     const response = await api.get('/api/blogs')
 
-    response.body.forEach(blog => {
+    response.body.forEach((blog) => {
       expect(blog.id).toBeDefined()
     })
   })
 
   describe('creating a blog', () => {
-
     test('is successful with the correct parameters', async () => {
+      const users = await helper.usersInDb()
+      const blog = helper.oneBlog[0]
+
+      blog.user = users[0].id
+
+      const auth = await helper.getAuth(users[0])
+
       await api
         .post('/api/blogs')
-        .send(helper.oneBlog[0])
+        .send(blog)
+        .set('Authorization', `Bearer ${auth}`)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogs = await helper.blogsInDb()
-      expect(blogs).toHaveLength(helper.initialBlogs.length+1)
+      expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
 
-      const ids = blogs.map( blog => blog.id)
+      const ids = blogs.map((blog) => blog.id)
       expect(ids).toContain(helper.oneBlog[0].id)
     })
 
@@ -68,9 +74,16 @@ describe('when there are some blogs initially', () => {
       const noLikes = helper.oneBlog[0]
       delete noLikes.likes
 
+      const users = await helper.usersInDb()
+
+      noLikes.user = users[0].id
+
+      const auth = await helper.getAuth(users[0])
+
       await api
         .post('/api/blogs')
         .send(noLikes)
+        .set('Authorization', `Bearer ${auth}`)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
@@ -82,8 +95,15 @@ describe('when there are some blogs initially', () => {
       const noTitle = helper.oneBlog[0]
       delete noTitle.title
 
+      const users = await helper.usersInDb()
+
+      noTitle.user = users[0].id
+
+      const auth = await helper.getAuth(users[0])
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${auth}`)
         .send(noTitle)
         .expect(400)
     })
@@ -92,33 +112,59 @@ describe('when there are some blogs initially', () => {
       const noUrl = helper.oneBlog[0]
       delete noUrl.url
 
+      const users = await helper.usersInDb()
+
+      noUrl.user = users[0].id
+
+      const auth = await helper.getAuth(users[0])
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${auth}`)
         .send(noUrl)
         .expect(400)
     })
 
+    test('fails with statuscode 401 if there is no authorization', async () => {
+      const users = await helper.usersInDb()
+      const blog = helper.oneBlog[0]
+
+      blog.user = users[0].id
+
+      await api
+        .post('/api/blogs')
+        .send(blog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+    })
   })
   describe('deleting a blog', () => {
     test('is successful with a valid id', async () => {
       const blogs = await helper.blogsInDb()
       const deletedBlog = blogs[1]
 
+      const users = await helper.usersInDb()
+      const auth = await helper.getAuth(users[0])
+
       await api
         .delete(`/api/blogs/${deletedBlog.id}`)
+        .set('Authorization', `Bearer ${auth}`)
         .expect(204)
 
       const resultBlogs = await helper.blogsInDb()
-      expect(resultBlogs).toHaveLength(blogs.length-1)
+      expect(resultBlogs).toHaveLength(blogs.length - 1)
 
-      const ids = resultBlogs.map(blog => blog.id)
+      const ids = resultBlogs.map((blog) => blog.id)
       expect(ids).not.toContain(deletedBlog.id)
     })
 
-    test('fails with statuscode 400 if blog doesn\'t exist', async () => {
+    test("fails with statuscode 400 if blog doesn't exist", async () => {
+      const users = await helper.usersInDb()
+      const auth = await helper.getAuth(users[0])
 
       await api
         .delete(`/api/blogs/${helper.unknownId}`)
+        .set('Authorization', `Bearer ${auth}`)
         .expect(400)
     })
   })
@@ -136,12 +182,11 @@ describe('when there are some blogs initially', () => {
         .expect('Content-Type', /application\/json/)
 
       const resultBlogs = await helper.blogsInDb()
-      const sameBlog = resultBlogs.find( blog => blog.id === changedLikes.id)
+      const sameBlog = resultBlogs.find((blog) => blog.id === changedLikes.id)
       expect(sameBlog.likes).toBe(changedLikes.likes)
     })
   })
 })
-
 
 afterAll(async () => {
   await mongoose.connection.close()
