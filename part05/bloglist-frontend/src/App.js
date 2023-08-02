@@ -79,7 +79,21 @@ const App = () => {
         setMessage(null)
       }, 3000)
     })
+  }
 
+  const increaseLikes = id => {
+    const blog = blogs.find(b => b.id === id)
+    const changedBlog = { ...blog, likes: blog.likes+1, user: blog.user.id}
+
+    blogService.update(id, changedBlog).then(returned => {
+      setBlogs(blogs.map(b => b.id !== id ? b : returned))
+    }).catch( e => {
+      setMessage(e)
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
+      setBlogs(blogs.filter(b => b.id !== id))
+    })
   }
 
   if (user !== null) {
@@ -95,7 +109,7 @@ const App = () => {
           <BlogForm createBlog={postNewBlog}/>
         </Togglable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} increaseLikes={() => increaseLikes(blog.id)} />
         )}
       </div>
     )
