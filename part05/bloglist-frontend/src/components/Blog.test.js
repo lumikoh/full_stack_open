@@ -34,4 +34,26 @@ describe('<Blog />', () => {
     const likes = screen.queryByText(`likes ${blog.likes}`, { exact: false })
     expect(likes).toBeNull()
   })
+
+  test('shows the url and likes when the button is clicked', async () => {
+    let container = render(
+      <Blog
+        blog={blog}
+        currentUser='testUser'
+        removeBlog={() => {}}
+        increaseLikes={() => {}}
+      />
+    ).container
+
+    const user = userEvent.setup()
+    const showButton = container.querySelector('.visibleButton')
+    await user.click(showButton)
+
+    const url = screen.queryByText(blog.url, { exact: false })
+    expect(url).not.toBeNull()
+
+    const likes = screen.queryByText(`likes ${blog.likes}`, { exact: false })
+    expect(likes).not.toBeNull()
+  })
+
 })
