@@ -65,6 +65,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
 
     blogService.create(blogpost).then( newBlog => {
+      newBlog.user = user
       const newBlogs = blogs.concat(newBlog)
       setBlogs(newBlogs)
       setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
