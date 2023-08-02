@@ -14,16 +14,26 @@ const blog = {
   },
 }
 
+
 describe('<Blog />', () => {
-  test('renders only title and author', async () => {
-    render(
+  let container
+
+  const mockHandler = jest.fn()
+  const user = userEvent.setup()
+
+  beforeEach(() => {
+    container = render(
       <Blog
         blog={blog}
         currentUser='testUser'
         removeBlog={() => {}}
-        increaseLikes={() => {}}
+        increaseLikes={mockHandler}
       />
-    )
+    ).container
+  })
+
+
+  test('renders only title and author', async () => {
 
     const author = screen.getByText('testblog testAuthor', { exact: false })
     expect(author).toBeDefined()
@@ -36,16 +46,7 @@ describe('<Blog />', () => {
   })
 
   test('shows the url and likes when the button is clicked', async () => {
-    let container = render(
-      <Blog
-        blog={blog}
-        currentUser='testUser'
-        removeBlog={() => {}}
-        increaseLikes={() => {}}
-      />
-    ).container
 
-    const user = userEvent.setup()
     const showButton = container.querySelector('.visibleButton')
     await user.click(showButton)
 
@@ -56,4 +57,15 @@ describe('<Blog />', () => {
     expect(likes).not.toBeNull()
   })
 
+  test('clicking like button twice calls the assigned function each time', async () => {
+    const showButton = container.querySelector('.visibleButton')
+    await user.click(showButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
+
+  })
 })
