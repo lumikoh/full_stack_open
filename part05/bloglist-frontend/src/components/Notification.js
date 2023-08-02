@@ -1,7 +1,7 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, type }) => {
   if(!message) return <></>
 
-  return <p>{message}</p>
+  return <p className={type}>{message}</p>
 }
 
 export default Notification

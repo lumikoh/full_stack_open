@@ -13,6 +13,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
 
   const blogFormRef = useRef()
 
@@ -44,9 +45,13 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (e) {
+
       setMessage('wrong username or password')
+      setNotificationType('error')
+
       setTimeout(() => {
         setMessage(null)
+        setNotificationType(null)
       }, 3000)
     }
   }
@@ -66,15 +71,23 @@ const App = () => {
         newBlog.user = user
         const newBlogs = blogs.concat(newBlog)
         setBlogs(utils.sortBlogs(newBlogs))
+
         setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+        setNotificationType('notice')
+
         setTimeout(() => {
           setMessage(null)
+          setNotificationType(null)
         }, 3000)
       })
       .catch((error) => {
+
         setMessage(error.message)
+        setNotificationType('error')
+
         setTimeout(() => {
           setMessage(null)
+          setNotificationType(null)
         }, 3000)
       })
   }
@@ -91,9 +104,13 @@ const App = () => {
         )
       })
       .catch((e) => {
+
         setMessage(e.message)
+        setNotificationType('error')
+
         setTimeout(() => {
           setMessage(null)
+          setNotificationType(null)
         }, 3000)
         setBlogs(blogs.filter((b) => b.id !== id))
       })
@@ -109,10 +126,13 @@ const App = () => {
           setBlogs(blogs.filter((b) => b.id !== id))
         })
         .catch((e) => {
+
           setMessage(e.message)
+          setNotificationType('error')
 
           setTimeout(() => {
             setMessage(null)
+            setNotificationType(null)
           }, 3000)
         })
     }
@@ -122,7 +142,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification message={message} />
+        <Notification message={message} type={notificationType} />
         <div>
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
@@ -148,7 +168,7 @@ const App = () => {
   return (
     <div>
       <h2>log in to application</h2>
-      <Notification message={message} />
+      <Notification message={message} type={notificationType} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -156,6 +176,7 @@ const App = () => {
             type='text'
             value={username}
             name='Username'
+            id='username'
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
@@ -165,10 +186,13 @@ const App = () => {
             type='password'
             value={password}
             name='Password'
+            id='password'
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
+        <button type='submit' id='login-button'>
+          login
+        </button>
       </form>
     </div>
   )
