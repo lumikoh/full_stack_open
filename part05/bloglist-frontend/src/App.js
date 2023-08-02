@@ -89,12 +89,30 @@ const App = () => {
     blogService.update(id, changedBlog).then(returned => {
       setBlogs(utils.sortBlogs(blogs.map(b => b.id !== id ? b : returned)))
     }).catch( e => {
-      setMessage(e)
+      setMessage(e.message)
       setTimeout(() => {
         setMessage(null)
       }, 3000)
       setBlogs(blogs.filter(b => b.id !== id))
     })
+  }
+
+  const removeBlog = id => {
+    const blog = blogs.find(b => b.id === id)
+
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+
+      blogService.removeOne(id).then( () => {
+        setBlogs(blogs.filter(b => b.id !== id))
+
+      }).catch( e => {
+        setMessage(e.message)
+
+        setTimeout(() => {
+          setMessage(null)
+        }, 3000)
+      })
+    }
   }
 
   if (user !== null) {
@@ -106,11 +124,19 @@ const App = () => {
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </div>
-        <Togglable buttonlabel="new note" ref={blogFormRef}>
+        <br></br>
+        <Togglable buttonlabel="new blog" ref={blogFormRef}>
           <BlogForm createBlog={postNewBlog}/>
         </Togglable>
+        <br></br>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} increaseLikes={() => increaseLikes(blog.id)} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            increaseLikes={() => increaseLikes(blog.id)} 
+            removeBlog={() => removeBlog(blog.id)}
+            currentUser={user.username}
+          />
         )}
       </div>
     )
