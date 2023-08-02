@@ -5,6 +5,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
+import utils from './services/utils'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( utils.sortBlogs(blogs) )
     )  
   }, [])
 
@@ -67,7 +68,7 @@ const App = () => {
     blogService.create(blogpost).then( newBlog => {
       newBlog.user = user
       const newBlogs = blogs.concat(newBlog)
-      setBlogs(newBlogs)
+      setBlogs(utils.sortBlogs(newBlogs))
       setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
       setTimeout( () => {
         setMessage(null)
@@ -86,7 +87,7 @@ const App = () => {
     const changedBlog = { ...blog, likes: blog.likes+1, user: blog.user.id}
 
     blogService.update(id, changedBlog).then(returned => {
-      setBlogs(blogs.map(b => b.id !== id ? b : returned))
+      setBlogs(utils.sortBlogs(blogs.map(b => b.id !== id ? b : returned)))
     }).catch( e => {
       setMessage(e)
       setTimeout(() => {
