@@ -35,4 +35,20 @@ describe('Blog app', function() {
       cy.get('.error').contains('wrong username or password')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'lumiko', password: 'testpw' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('.title-input').type('A test blogpost')
+      cy.get('.author-input').type('lumiko')
+      cy.get('.url-input').type('www.google.com')
+      cy.get('.create-button').click()
+
+      cy.contains('A test blogpost lumiko')
+    })
+  })
 })
