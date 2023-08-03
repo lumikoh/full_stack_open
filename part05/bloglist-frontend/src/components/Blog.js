@@ -14,9 +14,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const showDeleteButton = {
-    display: blog.user.username === currentUser ? '' : 'none',
-  }
+  const deleteVisible = blog.user.username === currentUser
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -43,7 +41,8 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
         <br></br>
         {blog.user.name}
         <br></br>
-        <div style={showDeleteButton}>
+        {deleteVisible &&
+        <div>
           <button
             onClick={removeBlog}
             style={{ background: 'red', color: 'white' }}
@@ -52,6 +51,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
             remove
           </button>
         </div>
+        }
       </div>
       }
     </div>

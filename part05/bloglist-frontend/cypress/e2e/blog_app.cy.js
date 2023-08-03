@@ -75,5 +75,12 @@ describe('Blog app', function() {
       cy.get('.notice').contains('Blog Full Stack Open by lumi removed')
     })
 
+    it('Users cannot see delete button for others\' blogs', function() {
+      cy.get('.visibleButton').eq(0).click()
+      cy.get('.delete-button').should('not.exist')
+      cy.contains('SuperUser')
+      cy.contains('www.fullstackopen.com').should('not.exist')
+    })
+
   })
 })
