@@ -7,14 +7,15 @@ Cypress.Commands.add('login', ({ username, password }) => {
   })
 })
 
-Cypress.Commands.add('addBlog', ({ title, author, url }) => {
+Cypress.Commands.add('addBlog', ({ title, author, url, likes }) => {
   cy.request({
     method: 'POST',
     url: 'http://localhost:3001/api/blogs',
     body: {
       title,
       url,
-      author
+      author,
+      likes
     },
     headers: {
       Authorization: `Bearer ${JSON.parse(localStorage.getItem('loggedBlogUser')).token}`
@@ -26,7 +27,7 @@ Cypress.Commands.add('createUser', ({ username, password, name }) => {
   const user = {
     name,
     username,
-    password
+    password,
   }
   cy.request('POST', 'http://localhost:3001/api/users/', user)
 })
