@@ -33,6 +33,12 @@ const reducer = (state = initialState, action) => {
               votes: anecdote.votes + 1,
             }
       )
+
+    case 'NEW-ANECDOTE':
+      return [
+        ...state,
+        action.payload.anecdote
+      ]
     default:
       return state
   }
@@ -42,6 +48,15 @@ export const voteId = (id) => {
   return {
     type: 'VOTE',
     payload: { id },
+  }
+}
+
+export const newAnecdote = (content) => {
+  return {
+    type: 'NEW-ANECDOTE',
+    payload: {
+      anecdote: asObject(content)
+    }
   }
 }
 
