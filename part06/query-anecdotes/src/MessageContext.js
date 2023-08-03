@@ -1,10 +1,10 @@
-import { createContext, useReducer, useContext } from "react";
+import { createContext, useReducer, useContext } from 'react'
 
 const messageReducer = (state, action) => {
-  switch(action.type) {
-    case "DISPLAY":
+  switch (action.type) {
+    case 'DISPLAY':
       return action.payload
-    case "REMOVE":
+    case 'REMOVE':
       return null
     default:
       return state
