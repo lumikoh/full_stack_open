@@ -36,6 +36,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
         <button
           onClick={increaseLikes}
           style={{ background: 'green', color: 'white' }}
+          className='like-button'
         >
           like
         </button>
