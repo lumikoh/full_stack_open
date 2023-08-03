@@ -47,6 +47,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
           <button
             onClick={removeBlog}
             style={{ background: 'red', color: 'white' }}
+            className='delete-button'
           >
             remove
           </button>

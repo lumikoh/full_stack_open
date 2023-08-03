@@ -19,6 +19,7 @@ describe('Blog app', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
+      cy.contains('log in to application')
       cy.get('#username').type('lumiko')
       cy.get('#password').type('testpw')
       cy.get('#login-button').click()
@@ -27,6 +28,7 @@ describe('Blog app', function() {
     })
 
     it('fails with wrong credentials', function() {
+      cy.contains('log in to application')
       cy.get('#username').type('lumiko')
       cy.get('#password').type('wrongpw')
       cy.get('#login-button').click()
@@ -65,6 +67,12 @@ describe('Blog app', function() {
       cy.get('.visibleButton').eq(0).click()
       cy.get('.like-button').click()
       cy.contains('likes 1')
+    })
+
+    it('Users can delete their own blog', function() {
+      cy.get('.visibleButton').eq(1).click()
+      cy.get('.delete-button').click()
+      cy.get('.notice').contains('Blog Full Stack Open by lumi removed')
     })
 
   })

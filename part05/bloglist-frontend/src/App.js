@@ -124,6 +124,15 @@ const App = () => {
         .removeOne(id)
         .then(() => {
           setBlogs(blogs.filter((b) => b.id !== id))
+
+          setMessage(`Blog ${blog.title} by ${blog.author} removed`)
+          setNotificationType('notice')
+
+          setTimeout(() => {
+            setMessage(null)
+            setNotificationType(null)
+          }, 3000)
+
         })
         .catch((e) => {
 
