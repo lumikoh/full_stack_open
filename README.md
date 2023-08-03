@@ -8,7 +8,7 @@ The course consists of the following parts, the completed parts are marked with 
 - [x] Part  2: Communicating with server
 - [x] Part  3: Programming a server with NodeJS and Express
 - [x] Part  4: Testing Express servers, user administration
-- [ ] Part  5: Testing React apps
+- [x] Part  5: Testing React apps
 - [ ] Part  6: Advanced state management
 - [ ] Part  7: React router, custom hooks, styling app with CSS and webpack
 - [ ] Part  8: GraphQL
