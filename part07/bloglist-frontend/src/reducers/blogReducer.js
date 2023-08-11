@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
 import { setNotification } from './notificationReducer'
+import { sortBlogs } from '../services/utils'
 
 const initialState = []
 
@@ -9,15 +10,24 @@ const blogSlice = createSlice({
   initialState,
   reducers: {
     setBlogs(state, action) {
-      return action.payload
+      return sortBlogs(action.payload)
     },
     addBlog(state, action) {
       state.push(action.payload)
+      return sortBlogs(state)
+    },
+    updateBlog(state, action) {
+      return sortBlogs(
+        state.map((b) => (b.id !== action.payload.id ? b : action.payload))
+      )
+    },
+    removeBlog(state, action) {
+      return state.filter((b) => b.id !== action.payload)
     },
   },
 })
 
-export const { setBlogs, addBlog } = blogSlice.actions
+export const { setBlogs, addBlog, updateBlog, removeBlog } = blogSlice.actions
 
 export const initialBlogs = () => {
   return async (dispatch) => {
@@ -43,6 +53,41 @@ export const newBlog = (newBlog, user) => {
       )
     } catch (error) {
       dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+    }
+  }
+}
+
+export const increaseLikes = (blog) => {
+  return async (dispatch) => {
+    try {
+      const changedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+      const returnedBlog = await blogService.update(changedBlog.id, changedBlog)
+      dispatch(updateBlog(returnedBlog))
+    } catch (error) {
+      dispatch(removeBlog(blog.id))
+      dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+    }
+  }
+}
+
+export const deleteBlog = (blog) => {
+  return async (dispatch) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.removeOne(blog.id)
+        dispatch(removeBlog(blog.id))
+        dispatch(
+          setNotification(
+            {
+              message: `Blog ${blog.title} by ${blog.author} removed`,
+              type: 'notice',
+            },
+            5
+          )
+        )
+      } catch (error) {
+        dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+      }
     }
   }
 }

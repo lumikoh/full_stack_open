@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { increaseLikes, deleteBlog } from '../reducers/blogReducer'
+import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
+const Blog = ({ blog, currentUser }) => {
+  const dispatch = useDispatch()
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -34,7 +38,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
           <br></br>
           {'likes ' + blog.likes}
           <button
-            onClick={increaseLikes}
+            onClick={() => dispatch(increaseLikes(blog))}
             style={{ background: 'green', color: 'white' }}
             className="like-button"
           >
@@ -46,7 +50,7 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
           {deleteVisible && (
             <div>
               <button
-                onClick={removeBlog}
+                onClick={() => dispatch(deleteBlog(blog))}
                 style={{ background: 'red', color: 'white' }}
                 className="delete-button"
               >
