@@ -62,8 +62,6 @@ const Blog = ({ blog, increaseLikes, removeBlog, currentUser }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  increaseLikes: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
   currentUser: PropTypes.string.isRequired,
 }
 

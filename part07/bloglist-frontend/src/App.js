@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
-import utils from './services/utils'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { initialBlogs, newBlog } from './reducers/blogReducer'
+import BlogList from './components/BlogList'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
@@ -20,8 +19,8 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(utils.sortBlogs(blogs)))
-  }, [])
+    dispatch(initialBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogUser')
@@ -67,93 +66,7 @@ const App = () => {
 
   const postNewBlog = (blogpost) => {
     blogFormRef.current.toggleVisibility()
-
-    blogService
-      .create(blogpost)
-      .then((newBlog) => {
-        newBlog.user = user
-        const newBlogs = blogs.concat(newBlog)
-        setBlogs(utils.sortBlogs(newBlogs))
-
-        dispatch(
-          setNotification(
-            {
-              message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
-              type: 'notice',
-            },
-            5
-          )
-        )
-      })
-      .catch((error) => {
-        dispatch(
-          setNotification(
-            {
-              message: error.message,
-              type: 'error',
-            },
-            5
-          )
-        )
-      })
-  }
-
-  const increaseLikes = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const changedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
-
-    blogService
-      .update(id, changedBlog)
-      .then((returned) => {
-        setBlogs(
-          utils.sortBlogs(blogs.map((b) => (b.id !== id ? b : returned)))
-        )
-      })
-      .catch((e) => {
-        dispatch(
-          setNotification(
-            {
-              message: e.message,
-              type: 'error',
-            },
-            5
-          )
-        )
-        setBlogs(blogs.filter((b) => b.id !== id))
-      })
-  }
-
-  const removeBlog = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      blogService
-        .removeOne(id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== id))
-
-          dispatch(
-            setNotification(
-              {
-                message: `Blog ${blog.title} by ${blog.author} removed`,
-                type: 'notice',
-              },
-              5
-            )
-          )
-        })
-        .catch((e) => {
-          dispatch(
-            setNotification(
-              {
-                message: e.message,
-                type: 'error',
-              },
-              5
-            )
-          )
-        })
-    }
+    dispatch(newBlog(blogpost, user))
   }
 
   if (user !== null) {
@@ -170,15 +83,7 @@ const App = () => {
           <BlogForm createBlog={postNewBlog} />
         </Togglable>
         <br></br>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            increaseLikes={() => increaseLikes(blog.id)}
-            removeBlog={() => removeBlog(blog.id)}
-            currentUser={user.username}
-          />
-        ))}
+        <BlogList username={user.username} />
       </div>
     )
   }
