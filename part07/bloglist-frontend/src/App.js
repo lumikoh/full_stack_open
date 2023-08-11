@@ -6,14 +6,16 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import utils from './services/utils'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
-  const [notificationType, setNotificationType] = useState(null)
 
   const blogFormRef = useRef()
 
@@ -45,13 +47,15 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (e) {
-      setMessage('wrong username or password')
-      setNotificationType('error')
-
-      setTimeout(() => {
-        setMessage(null)
-        setNotificationType(null)
-      }, 3000)
+      dispatch(
+        setNotification(
+          {
+            message: 'wrong username or password',
+            type: 'error',
+          },
+          5
+        )
+      )
     }
   }
 
@@ -71,22 +75,26 @@ const App = () => {
         const newBlogs = blogs.concat(newBlog)
         setBlogs(utils.sortBlogs(newBlogs))
 
-        setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-        setNotificationType('notice')
-
-        setTimeout(() => {
-          setMessage(null)
-          setNotificationType(null)
-        }, 3000)
+        dispatch(
+          setNotification(
+            {
+              message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+              type: 'notice',
+            },
+            5
+          )
+        )
       })
       .catch((error) => {
-        setMessage(error.message)
-        setNotificationType('error')
-
-        setTimeout(() => {
-          setMessage(null)
-          setNotificationType(null)
-        }, 3000)
+        dispatch(
+          setNotification(
+            {
+              message: error.message,
+              type: 'error',
+            },
+            5
+          )
+        )
       })
   }
 
@@ -102,13 +110,15 @@ const App = () => {
         )
       })
       .catch((e) => {
-        setMessage(e.message)
-        setNotificationType('error')
-
-        setTimeout(() => {
-          setMessage(null)
-          setNotificationType(null)
-        }, 3000)
+        dispatch(
+          setNotification(
+            {
+              message: e.message,
+              type: 'error',
+            },
+            5
+          )
+        )
         setBlogs(blogs.filter((b) => b.id !== id))
       })
   }
@@ -122,22 +132,26 @@ const App = () => {
         .then(() => {
           setBlogs(blogs.filter((b) => b.id !== id))
 
-          setMessage(`Blog ${blog.title} by ${blog.author} removed`)
-          setNotificationType('notice')
-
-          setTimeout(() => {
-            setMessage(null)
-            setNotificationType(null)
-          }, 3000)
+          dispatch(
+            setNotification(
+              {
+                message: `Blog ${blog.title} by ${blog.author} removed`,
+                type: 'notice',
+              },
+              5
+            )
+          )
         })
         .catch((e) => {
-          setMessage(e.message)
-          setNotificationType('error')
-
-          setTimeout(() => {
-            setMessage(null)
-            setNotificationType(null)
-          }, 3000)
+          dispatch(
+            setNotification(
+              {
+                message: e.message,
+                type: 'error',
+              },
+              5
+            )
+          )
         })
     }
   }
@@ -146,7 +160,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification message={message} type={notificationType} />
+        <Notification />
         <div>
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
@@ -172,7 +186,7 @@ const App = () => {
   return (
     <div>
       <h2>log in to application</h2>
-      <Notification message={message} type={notificationType} />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username
