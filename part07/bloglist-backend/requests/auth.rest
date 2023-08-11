@@ -1,0 +1,36 @@
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0YzkxY2I1NTJkZWRlMmMxMDkzNTU5OSIsImlhdCI6MTY5MDkwMjczNH0.7oEq3bm3Mz24xWro5ysf838vBpJNM6_mOI61_jUzkbs
+
+  {
+    "_id": "5a422a851b54a676234d17f7",
+    "title": "React patterns",
+    "author": "Michael Chan",
+    "url": "https://reactpatterns.com/",
+    "likes": 7
+  }
+
+###
+
+delete http://localhost:3001/api/blogs/64c91d91140fb41c4228a234
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0YzkxY2I1NTJkZWRlMmMxMDkzNTU5OSIsImlhdCI6MTY5MDkwMjczNH0.7oEq3bm3Mz24xWro5ysf838vBpJNM6_mOI61_jUzkbs
+
+
+###
+post http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "name": "Lumi",
+  "username": "lumiko",
+  "password": "passwordy"
+}
+
+###
+post http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "lumiko",
+  "password": "passwordy"
+}
