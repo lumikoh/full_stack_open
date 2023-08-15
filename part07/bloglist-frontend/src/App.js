@@ -10,6 +10,7 @@ import LoginForm from './components/LoginForm'
 import Header from './components/Header'
 import UserList from './components/UserList'
 import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -26,14 +27,18 @@ const App = () => {
     dispatch(initialUsers())
   }, [dispatch])
 
-  const match = useMatch('/users/:id')
-  const userId = match ? match.params.id : null
+  const userMatch = useMatch('/users/:id')
+  const blogMatch = useMatch('/blogs/:id')
+
+  const userId = userMatch ? userMatch.params.id : null
+  const blogId = blogMatch ? blogMatch.params.id : null
 
   return (
     <div>
       <Header />
       <Routes>
         <Route path="/users/:id" element={<User id={userId} />} />
+        <Route path="/blogs/:id" element={<Blog id={blogId} />} />
         <Route path="/" element={<BlogList />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/users" element={<UserList />} />

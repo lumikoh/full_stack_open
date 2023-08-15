@@ -1,65 +1,51 @@
-import { useState } from 'react'
 import { increaseLikes, deleteBlog } from '../reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Blog = ({ blog }) => {
+const Blog = ({ id }) => {
   const dispatch = useDispatch()
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
+  const blog = useSelector((state) => state.blogs).find((b) => b.id === id)
+
   const user = useSelector((state) => state.user)
 
-  const [visible, setVisible] = useState(false)
+  const deleteVisible =
+    user && blog ? blog.user.username === user.username : null
 
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const deleteVisible = user ? blog.user.username === user.username : null
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  if (!blog) {
+    return null
   }
 
   return (
-    <div style={blogStyle} className="blog-container">
-      <div>
+    <div className="blog-info">
+      <h2>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility} className="visibleButton">
-          {visible ? 'hide' : 'show'}
+      </h2>
+      <div>
+        <a href={blog.url}>{blog.url}</a>
+        <br></br>
+        {'likes ' + blog.likes}
+        <button
+          onClick={() => dispatch(increaseLikes(blog))}
+          style={{ background: 'green', color: 'white' }}
+          className="like-button"
+        >
+          like
         </button>
+        <br></br>
+        added by {blog.user.name}
+        <br></br>
+        {deleteVisible && (
+          <div>
+            <button
+              onClick={() => dispatch(deleteBlog(blog))}
+              style={{ background: 'red', color: 'white' }}
+              className="delete-button"
+            >
+              remove
+            </button>
+          </div>
+        )}
       </div>
-      {visible && (
-        <div style={showWhenVisible}>
-          {blog.url}
-          <br></br>
-          {'likes ' + blog.likes}
-          <button
-            onClick={() => dispatch(increaseLikes(blog))}
-            style={{ background: 'green', color: 'white' }}
-            className="like-button"
-          >
-            like
-          </button>
-          <br></br>
-          {blog.user.name}
-          <br></br>
-          {deleteVisible && (
-            <div>
-              <button
-                onClick={() => dispatch(deleteBlog(blog))}
-                style={{ background: 'red', color: 'white' }}
-                className="delete-button"
-              >
-                remove
-              </button>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   )
 }
