@@ -7,10 +7,12 @@ import { Routes, Route, useMatch } from 'react-router-dom'
 
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
-import Header from './components/Header'
+
 import UserList from './components/UserList'
 import User from './components/User'
 import Blog from './components/Blog'
+import Navigation from './components/Navigation'
+import Notification from './components/Notification'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -32,10 +34,11 @@ const App = () => {
 
   const userId = userMatch ? userMatch.params.id : null
   const blogId = blogMatch ? blogMatch.params.id : null
-
   return (
     <div>
-      <Header />
+      <Navigation />
+      <h2>blog app</h2>
+      <Notification />
       <Routes>
         <Route path="/users/:id" element={<User id={userId} />} />
         <Route path="/blogs/:id" element={<Blog id={blogId} />} />
