@@ -13,10 +13,11 @@ const Header = () => {
       {user && (
         <div>
           {user.name} logged in
+          <br />
+          <br />
           <button onClick={() => dispatch(logoutUser())}>logout</button>
         </div>
       )}
-      <br></br>
     </>
   )
 }
