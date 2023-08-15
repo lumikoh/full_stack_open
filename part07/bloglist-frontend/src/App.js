@@ -1,18 +1,16 @@
-import { useEffect, useRef } from 'react'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
-import { useDispatch, useSelector } from 'react-redux'
-import { initialBlogs, newBlog } from './reducers/blogReducer'
-import { initialUser, logoutUser } from './reducers/userReducer'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { initialBlogs } from './reducers/blogReducer'
+import { initialUser } from './reducers/userReducer'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
+import Header from './components/Header'
+import UserList from './components/UserList'
 
 const App = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
-
-  const blogFormRef = useRef()
 
   useEffect(() => {
     dispatch(initialBlogs())
@@ -22,35 +20,16 @@ const App = () => {
     dispatch(initialUser())
   }, [dispatch])
 
-  const postNewBlog = (blogpost) => {
-    blogFormRef.current.toggleVisibility()
-    dispatch(newBlog(blogpost, user))
-  }
-
-  if (user !== null) {
-    return (
-      <div>
-        <h2>blogs</h2>
-        <Notification />
-        <div>
-          {user.name} logged in
-          <button onClick={() => dispatch(logoutUser())}>logout</button>
-        </div>
-        <br></br>
-        <Togglable buttonlabel="new blog" ref={blogFormRef}>
-          <BlogForm createBlog={postNewBlog} />
-        </Togglable>
-        <br></br>
-        <BlogList username={user.username} />
-      </div>
-    )
-  }
-
   return (
     <div>
-      <h2>log in to application</h2>
-      <Notification />
-      <LoginForm />
+      <Header />
+      <Router>
+        <Routes>
+          <Route path="/" element={<BlogList />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/users" element={<UserList />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
