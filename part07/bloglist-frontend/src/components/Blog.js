@@ -1,7 +1,9 @@
-import { increaseLikes, deleteBlog } from '../reducers/blogReducer'
+import { useEffect, useState } from 'react'
+import { increaseLikes, deleteBlog, commentBlog } from '../reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Blog = ({ id }) => {
+  const [comment, setComment] = useState('')
   const dispatch = useDispatch()
 
   const blog = useSelector((state) => state.blogs).find((b) => b.id === id)
@@ -10,6 +12,21 @@ const Blog = ({ id }) => {
 
   const deleteVisible =
     user && blog ? blog.user.username === user.username : null
+
+  useEffect
+
+  const addComment = (event) => {
+    event.preventDefault()
+
+    dispatch(
+      commentBlog({
+        content: comment,
+        blog: blog.id,
+      })
+    )
+
+    setComment('')
+  }
 
   if (!blog) {
     return null
@@ -47,6 +64,16 @@ const Blog = ({ id }) => {
         )}
       </div>
       <h3>comments</h3>
+      <form onSubmit={addComment}>
+        <input
+          type="text"
+          value={comment}
+          name="Comment"
+          className="comment-input"
+          onChange={({ target }) => setComment(target.value)}
+        />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
         {blog.comments.map((comment) => (
           <li key={comment.id}>{comment.content}</li>
