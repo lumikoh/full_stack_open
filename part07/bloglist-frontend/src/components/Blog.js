@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { increaseLikes, deleteBlog, commentBlog } from '../reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
+import { Button, Col, Form, Row } from 'react-bootstrap'
 
 const Blog = ({ id }) => {
   const [comment, setComment] = useState('')
@@ -41,39 +42,53 @@ const Blog = ({ id }) => {
         <a href={blog.url}>{blog.url}</a>
         <br></br>
         {'likes ' + blog.likes}
-        <button
+        <Button
+          size="sm"
+          variant="outline-success"
+          style={{ marginLeft: 15, paddingBottom: 5 }}
           onClick={() => dispatch(increaseLikes(blog))}
-          style={{ background: 'green', color: 'white' }}
           className="like-button"
         >
           like
-        </button>
+        </Button>
         <br></br>
         added by {blog.user.name}
         <br></br>
         {deleteVisible && (
           <div>
-            <button
+            <Button
+              size="sm"
+              variant="outline-danger"
+              style={{ marginTop: 5 }}
               onClick={() => dispatch(deleteBlog(blog))}
-              style={{ background: 'red', color: 'white' }}
               className="delete-button"
             >
               remove
-            </button>
+            </Button>
           </div>
         )}
       </div>
       <h3>comments</h3>
-      <form onSubmit={addComment}>
-        <input
-          type="text"
-          value={comment}
-          name="Comment"
-          className="comment-input"
-          onChange={({ target }) => setComment(target.value)}
-        />
-        <button type="submit">add comment</button>
-      </form>
+      <Form onSubmit={addComment}>
+        <Form.Group>
+          <Row>
+            <Col>
+              <Form.Control
+                type="text"
+                value={comment}
+                name="Comment"
+                className="comment-input"
+                onChange={({ target }) => setComment(target.value)}
+              />
+            </Col>
+            <Col>
+              <Button type="submit" variant="outline-primary">
+                add comment
+              </Button>
+            </Col>
+          </Row>
+        </Form.Group>
+      </Form>
       <ul>
         {blog.comments.map((comment) => (
           <li key={comment.id}>{comment.content}</li>

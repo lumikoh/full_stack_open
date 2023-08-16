@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logoutUser } from '../reducers/userReducer'
-import { Nav, Navbar } from 'react-bootstrap'
+import { Button, Nav, Navbar } from 'react-bootstrap'
 
 const Navigation = () => {
   const dispatch = useDispatch()
@@ -9,10 +9,24 @@ const Navigation = () => {
 
   const styleSheet = {
     padding: 4,
+    style: 'bold',
+    color: 'white',
+    fontFamily: 'cursive',
+  }
+
+  const barStyle = {
+    borderBottom: '1px white solid',
+    width: '100%',
   }
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar
+      collapseOnSelect
+      expand="lg"
+      bg="dark"
+      variant="dark"
+      style={barStyle}
+    >
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="me-auto">
@@ -30,10 +44,18 @@ const Navigation = () => {
             {user ? (
               <em>
                 {user.name} logged in{' '}
-                <button onClick={() => dispatch(logoutUser())}>logout</button>
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  onClick={() => dispatch(logoutUser())}
+                >
+                  logout
+                </Button>
               </em>
             ) : (
-              <Link to="/login">login</Link>
+              <Link to="/login" style={styleSheet}>
+                login
+              </Link>
             )}
           </Nav.Link>
         </Nav>

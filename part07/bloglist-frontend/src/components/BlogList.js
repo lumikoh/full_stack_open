@@ -18,6 +18,11 @@ const BlogList = () => {
     borderWidth: 1,
     marginBottom: 5,
   }
+  const styleSheet = {
+    style: 'bold',
+    color: 'white',
+    fontFamily: 'cursive',
+  }
 
   const blogFormRef = useRef()
 
@@ -32,14 +37,20 @@ const BlogList = () => {
         <BlogForm createBlog={postNewBlog} />
       </Togglable>
       <br></br>
-      <Table striped>
+      <Table striped variant="dark">
         <tbody>
           {blogs.map((blog) => (
             <tr key={blog.id} style={blogStyle}>
               <td>
-                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                <Link style={styleSheet} to={`/blogs/${blog.id}`}>
+                  {blog.title}
+                </Link>
               </td>
-              <td>{blog.author}</td>
+              <td
+                style={{ ...styleSheet, textAlign: 'right', paddingRight: 30 }}
+              >
+                {blog.author}
+              </td>
             </tr>
           ))}
         </tbody>

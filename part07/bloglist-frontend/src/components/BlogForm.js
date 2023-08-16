@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button, Col, Form, Row } from 'react-bootstrap'
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
@@ -18,46 +19,66 @@ const BlogForm = ({ createBlog }) => {
     setUrl('')
   }
 
+  const stylesheet = {
+    width: '80%',
+  }
+
   return (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            className="title-input"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            className="author-input"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            className="url-input"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <div>
-          <button type="submit" className="create-button">
-            create
-          </button>
-        </div>
-      </form>
+    <div style={{ paddingBottom: 5 }}>
+      <h3>create new</h3>
+      <Form onSubmit={addBlog} style={stylesheet}>
+        <Form.Group>
+          <Row style={{ paddingBottom: 5 }}>
+            <Form.Label column sm={2}>
+              title:
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                value={title}
+                name="Title"
+                className="title-input"
+                onChange={({ target }) => setTitle(target.value)}
+              />
+            </Col>
+          </Row>
+          <Row style={{ paddingBottom: 5 }}>
+            <Form.Label column sm={2}>
+              author:
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                value={author}
+                name="Author"
+                className="author-input"
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+            </Col>
+          </Row>
+          <Row style={{ paddingBottom: 5 }}>
+            <Form.Label column sm={2}>
+              url:
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                value={url}
+                name="Url"
+                className="url-input"
+                onChange={({ target }) => setUrl(target.value)}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={{ span: 10 }}>
+              <Button variant="primary" type="submit" className="create-button">
+                create
+              </Button>
+            </Col>
+          </Row>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
