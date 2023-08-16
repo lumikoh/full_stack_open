@@ -35,7 +35,7 @@ const App = () => {
   const userId = userMatch ? userMatch.params.id : null
   const blogId = blogMatch ? blogMatch.params.id : null
   return (
-    <div>
+    <div className="container">
       <Navigation />
       <h2>blog app</h2>
       <Notification />

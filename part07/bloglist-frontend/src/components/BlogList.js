@@ -4,6 +4,7 @@ import { newBlog } from '../reducers/blogReducer'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 const BlogList = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -31,11 +32,18 @@ const BlogList = () => {
         <BlogForm createBlog={postNewBlog} />
       </Togglable>
       <br></br>
-      {blogs.map((blog) => (
-        <div key={blog.id} style={blogStyle}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-        </div>
-      ))}
+      <Table striped>
+        <tbody>
+          {blogs.map((blog) => (
+            <tr key={blog.id} style={blogStyle}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </td>
+              <td>{blog.author}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </>
   )
 }

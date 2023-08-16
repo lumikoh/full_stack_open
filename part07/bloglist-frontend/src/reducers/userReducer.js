@@ -34,7 +34,7 @@ export const loginUser = (username, password) => {
         setNotification(
           {
             message: 'wrong username or password',
-            type: 'error',
+            type: 'danger',
           },
           5
         )

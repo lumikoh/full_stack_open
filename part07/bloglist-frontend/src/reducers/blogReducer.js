@@ -54,13 +54,13 @@ export const newBlog = (newBlog, user) => {
         setNotification(
           {
             message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
-            type: 'notice',
+            type: 'success',
           },
           5
         )
       )
     } catch (error) {
-      dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+      dispatch(setNotification({ message: error.message, type: 'danger' }, 5))
     }
   }
 }
@@ -73,7 +73,7 @@ export const increaseLikes = (blog) => {
       dispatch(updateBlog(returnedBlog))
     } catch (error) {
       dispatch(removeBlog(blog.id))
-      dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+      dispatch(setNotification({ message: error.message, type: 'danger' }, 5))
     }
   }
 }
@@ -88,13 +88,13 @@ export const deleteBlog = (blog) => {
           setNotification(
             {
               message: `Blog ${blog.title} by ${blog.author} removed`,
-              type: 'notice',
+              type: 'success',
             },
             5
           )
         )
       } catch (error) {
-        dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+        dispatch(setNotification({ message: error.message, type: 'danger' }, 5))
       }
     }
   }
@@ -106,7 +106,7 @@ export const commentBlog = (comment) => {
       const result = await blogService.addComment(comment)
       dispatch(addComment(result))
     } catch (error) {
-      dispatch(setNotification({ message: error.message, type: 'error' }, 5))
+      dispatch(setNotification({ message: error.message, type: 'danger' }, 5))
     }
   }
 }
