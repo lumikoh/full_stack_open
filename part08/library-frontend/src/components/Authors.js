@@ -10,7 +10,7 @@ mutation updateBirth($name: String!, $setBornTo: Int!){
 }
 `
 
-const Authors = ({show, query}) => {
+const Authors = ({show, query, token}) => {
   const [name, setName] = useState('')
   const [birth, setBirth] =useState('')
 
@@ -51,7 +51,7 @@ const Authors = ({show, query}) => {
           ))}
         </tbody>
       </table>
-      <h3>Set birthyear</h3>
+      {token && <><h3>Set birthyear</h3>
       <form onSubmit={submit}>
         name
         <select value={name} onChange={ ({target}) => setName(target.value)}>
@@ -64,7 +64,7 @@ const Authors = ({show, query}) => {
         <input value={birth} onChange={ ({target}) => setBirth(target.value)}/>
         <br />
         <button type="submit">update author</button>
-      </form>
+      </form></>}
     </div>
   )
 }
