@@ -8,18 +8,16 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 5
+    minlength: 5,
   },
   published: {
     type: Number,
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author'
+    ref: 'Author',
   },
-  genres: [
-    { type: String}
-  ]
+  genres: [{ type: String }],
 })
 
 schema.plugin(uniqueValidator)
