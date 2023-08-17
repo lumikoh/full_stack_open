@@ -6,7 +6,7 @@ const Books = ({ show, query }) => {
   const [filter, setFilter] = useState('')
   const books = useQuery(BOOK_DATA, {
     variables: { genre: filter },
-    fetchPolicy: 'no-cache',
+    pollInterval: 2000,
   })
 
   if (!show || !query.data || !books.data) {

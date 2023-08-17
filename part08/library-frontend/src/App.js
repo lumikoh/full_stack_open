@@ -9,11 +9,24 @@ import { AUTHOR_DATA, BOOK_DATA, USER_DATA, BOOK_ADDED } from './queries'
 
 import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 
+export const updateCache = (cache, query, addedBook) => {
+  const unique = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+  cache.updateQuery(query, ({ allBooks }) => {
+    return { allBooks: unique(allBooks.concat(addedBook)) }
+  })
+}
+
 const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const authorData = useQuery(AUTHOR_DATA, { pollInterval: 2000 })
-  const bookData = useQuery(BOOK_DATA, { pollInterval: 2000 })
+  const bookData = useQuery(BOOK_DATA)
   const userData = useQuery(USER_DATA, { pollInterval: 2000 })
 
   useEffect(() => {
@@ -25,9 +38,20 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      console.log(data)
-      window.alert(
-        `New book ${data.data.bookAdded.title} by ${data.data.bookAdded.author.name}!`
+      const addedBook = data.data.bookAdded
+      window.alert(`New book ${addedBook.title} by ${addedBook.author.name}!`)
+      updateCache(
+        client.cache,
+        { query: BOOK_DATA, variables: { genre: '' } },
+        addedBook
+      )
+      updateCache(
+        client.cache,
+        {
+          query: BOOK_DATA,
+          variables: { genre: userData.data.me.favoriteGenre },
+        },
+        addedBook
       )
     },
   })
