@@ -11,6 +11,12 @@ query {
     bookCount
     born
   }
+  allBooks { 
+    title 
+    author
+    published 
+    genres
+  }
 }
 `
 
@@ -28,7 +34,7 @@ const App = () => {
 
       <Authors show={page === 'authors'} query={result} />
 
-      <Books show={page === 'books'} />
+      <Books show={page === 'books'} query={result} />
 
       <NewBook show={page === 'add'} />
     </div>
