@@ -5,9 +5,9 @@ import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
 
-import { AUTHOR_DATA, BOOK_DATA, USER_DATA } from './queries'
+import { AUTHOR_DATA, BOOK_DATA, USER_DATA, BOOK_ADDED } from './queries'
 
-import { useApolloClient, useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -22,6 +22,15 @@ const App = () => {
       setToken(savedToken)
     }
   }, [])
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data)
+      window.alert(
+        `New book ${data.data.bookAdded.title} by ${data.data.bookAdded.author.name}!`
+      )
+    },
+  })
 
   const client = useApolloClient()
 
