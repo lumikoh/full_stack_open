@@ -4,7 +4,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { gql, useQuery } from '@apollo/client'
 
-const ALL_AUTHORS = gql`
+const ALL_DATA = gql`
 query {
   allAuthors {
     name
@@ -22,7 +22,7 @@ query {
 
 const App = () => {
   const [page, setPage] = useState('authors')
-  const result = useQuery(ALL_AUTHORS)
+  const result = useQuery(ALL_DATA, {pollInterval: 2000})
 
   return (
     <div>
