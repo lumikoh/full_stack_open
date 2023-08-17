@@ -1,17 +1,18 @@
 import { useState } from 'react'
+import { BOOK_DATA } from '../queries'
+import { useQuery } from '@apollo/client'
 
 const Books = ({ show, query }) => {
   const [filter, setFilter] = useState('')
+  const books = useQuery(BOOK_DATA, { variables: { genre: filter } })
 
-  if (!show || !query.data) {
+  if (!show || !query.data || !books.data) {
     return null
   }
 
-  const books = query.data.allBooks
-
   const genres = [
     ...new Set(
-      books.reduce((result, b) => {
+      query.data.allBooks.reduce((result, b) => {
         return result.concat(b.genres)
       }, [])
     ),
@@ -34,15 +35,13 @@ const Books = ({ show, query }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books
-            .filter((b) => b.genres.find((g) => g === filter) || filter === '')
-            .map((a) => (
-              <tr key={a.title}>
-                <td>{a.title}</td>
-                <td>{a.author.name}</td>
-                <td>{a.published}</td>
-              </tr>
-            ))}
+          {books.data.allBooks.map((a) => (
+            <tr key={a.title}>
+              <td>{a.title}</td>
+              <td>{a.author.name}</td>
+              <td>{a.published}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       {genres.map((g) => (
