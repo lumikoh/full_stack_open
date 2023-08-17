@@ -2,6 +2,15 @@ const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
 
+const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
+const Author = require('./models/author')
+const Book = require('./models/book')
+
+require('dotenv').config()
+
+const MONGODB_URI = process.env.MONGODB_URI
+
 let authors = [
   {
     name: 'Robert Martin',
@@ -94,14 +103,20 @@ let books = [
   },
 ]
 
-/*
-  you can remove the placeholder query once your first one has been implemented 
-*/
+console.log('connecting to', MONGODB_URI)
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 const typeDefs = `
   type Book {
     title: String!
-    author: String!
+    author: Author!
     published: Int!
     genres: [String!]!
     id: ID!
@@ -137,8 +152,8 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    bookCount: () =>  books.length,
-    authorCount: () => authors.length,
+    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
       let filteredBooks = books
       if(args.author) {
@@ -149,7 +164,7 @@ const resolvers = {
       }
       return filteredBooks
     },
-    allAuthors: () => authors
+    allAuthors: async () => Author.find({}),
   },
 
   Author: {
@@ -159,14 +174,15 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: (root, args) => {
-      const book = {...args, id: uuid() }
-      if(!authors.find( a => a.name === args.author)) {
-        const author = {name: args.author, id: uuid() }
-        authors = authors.concat(author)
+    addBook: async (root, args) => {
+      let author = await Author.findOne({name: args.author})
+      if(!author) {
+        author = new Author({name: args.author })
+        await author.save()
       }
-      books = books.concat(book)
-      return book
+      const book = new Book({...args, author: author })
+      return book.save()
+
     },
     editAuthor: (root, args) => {
       const author = authors.find(a => a.name === args.name)
