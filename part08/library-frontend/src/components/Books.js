@@ -4,7 +4,10 @@ import { useQuery } from '@apollo/client'
 
 const Books = ({ show, query }) => {
   const [filter, setFilter] = useState('')
-  const books = useQuery(BOOK_DATA, { variables: { genre: filter } })
+  const books = useQuery(BOOK_DATA, {
+    variables: { genre: filter },
+    fetchPolicy: 'no-cache',
+  })
 
   if (!show || !query.data || !books.data) {
     return null

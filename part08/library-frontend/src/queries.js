@@ -56,6 +56,8 @@ export const CREATE_BOOK = gql`
       author {
         name
       }
+      published
+      genres
     }
   }
 `
