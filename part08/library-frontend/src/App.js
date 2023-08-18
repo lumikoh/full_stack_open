@@ -40,19 +40,21 @@ const App = () => {
     onData: ({ data }) => {
       const addedBook = data.data.bookAdded
       window.alert(`New book ${addedBook.title} by ${addedBook.author.name}!`)
-      updateCache(
-        client.cache,
-        { query: BOOK_DATA, variables: { genre: '' } },
-        addedBook
-      )
-      updateCache(
-        client.cache,
-        {
-          query: BOOK_DATA,
-          variables: { genre: userData.data.me.favoriteGenre },
-        },
-        addedBook
-      )
+      // This isn't working the way it should but it is an attempt to refresh all filters.
+      // In an actual program this isn't really smart and currently causes an error if
+      // the query with one of the new genres is not yet in the cache. However I left it
+      // as some sort of proof of concept.
+      for (const genre of addedBook.genres) {
+        updateCache(
+          client.cache,
+          {
+            query: BOOK_DATA,
+            variables: { genre: genre },
+          },
+          addedBook
+        )
+      }
+      updateCache(client.cache, { query: BOOK_DATA }, addedBook)
     },
   })
 

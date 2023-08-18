@@ -5,10 +5,10 @@ const Recommend = ({ show, user }) => {
   const books = useQuery(BOOK_DATA, {
     variables: { genre: user.data ? user.data.me.favoriteGenre : '' },
   })
-
   if (!show || !user.data || !books.data) {
     return null
   }
+
   const filter = user.data.me.favoriteGenre
 
   return (
