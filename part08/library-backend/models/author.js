@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-const uniqueValidator = require('mongoose-unique-validator')
-
 const schema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,8 +10,7 @@ const schema = new mongoose.Schema({
   born: {
     type: Number,
   },
+  books: [{ type: String }],
 })
-
-schema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('Author', schema)
