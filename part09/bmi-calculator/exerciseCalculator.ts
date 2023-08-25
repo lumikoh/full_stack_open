@@ -1,3 +1,11 @@
+import { containsNumbers } from "./utils"
+
+interface exerciseValues {
+    dayArray: number[],
+    target: number
+}
+
+
 interface Result { 
     periodLength: number,
     trainingDays: number,
@@ -6,6 +14,19 @@ interface Result {
     ratingDescription: string,
     target: number,
     average: number }
+
+const parseArguments = (args: string[]): exerciseValues => {
+    if (args.length < 4) throw new Error('Not enough arguments')
+
+    if(containsNumbers(args.slice(2))) {
+        return {
+            dayArray: args.slice(3).map( n => Number(n)),
+            target: Number(args[2])
+        }
+    } else {
+        throw new Error('Provided values were not numbers!')
+    }
+}
 
 const calculateExercises = (dayArray: number[], target: number): Result => {
     const trainingDays = dayArray.reduce((totalDays, value) => {
@@ -45,4 +66,13 @@ const calculateExercises = (dayArray: number[], target: number): Result => {
 }
 
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+    const { dayArray, target } = parseArguments(process.argv)
+    console.log(calculateExercises(dayArray, target))
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+}
