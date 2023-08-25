@@ -56,7 +56,7 @@ const calculateExercises = (dayArray: number[], target: number): Result => {
     return {
         periodLength: dayArray.length,
         trainingDays,
-        success: true,
+        success,
         rating,
         ratingDescription,
         target,
