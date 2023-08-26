@@ -1,11 +1,11 @@
-export const containsNumbers = (argument: any[]): boolean => {
-    for( const n of argument) {
-        if(isNaN(Number(n))) {
-            return false
-        }
+export const containsNumbers = (argument: string[]): boolean => {
+  for (const n of argument) {
+    if (isNaN(Number(n))) {
+      return false;
     }
+  }
 
-    return true
-}
+  return true;
+};
 
-export default "this is the default..."
+export default 'this is the default...';
