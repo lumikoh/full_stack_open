@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-node": "ts-node",
     "calculateBmi": "ts-node bmiScript.ts",
-    "calculateExercises": "ts-node exerciseCalculator.ts",
+    "calculateExercises": "ts-node exerciseScript.ts",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts ."
@@ -27,3 +27,4 @@
     "express": "^4.18.2"
   }
 }
+
