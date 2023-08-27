@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { DiaryEntry } from './types';
 import axios from 'axios';
+import DiaryForm from './components/DiaryForm';
 
 const App = () => {
-  //const [newDiary, setNewDiary] = useState('');
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
 
   useEffect(() => {
@@ -14,8 +14,13 @@ const App = () => {
       });
   }, []);
 
+  const addDiary = (diary: DiaryEntry) => {
+    setDiaries(diaries.concat(diary));
+  };
+
   return (
     <div>
+      <DiaryForm addDiary={addDiary} />
       <div>
         <h2>Diary entries</h2>
         {diaries.map((d) => (
