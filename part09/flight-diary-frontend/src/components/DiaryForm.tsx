@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { DiaryEntry } from '../types';
+import { ValidationError } from '../types';
 
 const DiaryForm = ({ addDiary }: { addDiary: Function }) => {
   const [date, setDate] = useState('');
   const [visibility, setVisiblity] = useState('');
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
+  const [notification, setNotification] = useState('');
 
   const addNewDiary = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -21,6 +23,22 @@ const DiaryForm = ({ addDiary }: { addDiary: Function }) => {
       .post<DiaryEntry>('http://localhost:3001/api/diaries', newDiary)
       .then((response) => {
         addDiary(response.data);
+      })
+      .catch((e) => {
+        if (axios.isAxiosError<ValidationError, Record<string, unknown>>(e)) {
+          if (e.response && e.response.data) {
+            const message = String(e.response.data);
+            setNotification(message);
+            setTimeout(() => {
+              setNotification('');
+            }, 5000);
+          }
+        } else {
+          setNotification('Error: something went wrong.');
+          setTimeout(() => {
+            setNotification('');
+          }, 5000);
+        }
       });
 
     setDate('');
@@ -32,6 +50,7 @@ const DiaryForm = ({ addDiary }: { addDiary: Function }) => {
   return (
     <div>
       <h2>Add new entry</h2>
+      {notification !== '' && <p style={{ color: 'red' }}>{notification}</p>}
       <form onSubmit={addNewDiary}>
         date
         <input
