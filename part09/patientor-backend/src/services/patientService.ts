@@ -3,7 +3,7 @@ import { v1 as uuid } from 'uuid';
 import patientData from '../../data/patients';
 import { NewPatient, NonSensitivePatient, Patient } from '../types';
 
-const patients: Patient[] = patientData;
+const patients: Patient[] = patientData as Patient[];
 
 const getEntries = (): NonSensitivePatient[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -13,6 +13,14 @@ const getEntries = (): NonSensitivePatient[] => {
     gender,
     occupation,
   }));
+};
+
+const getPatient = (id: string): Patient => {
+  const patient = patients.find((p) => p.id === id);
+  if (patient) {
+    return patient;
+  }
+  throw new Error('Patient with the given id not found');
 };
 
 const addPatient = (patient: NewPatient): NonSensitivePatient => {
@@ -36,4 +44,5 @@ const addPatient = (patient: NewPatient): NonSensitivePatient => {
 export default {
   getEntries,
   addPatient,
+  getPatient,
 };
