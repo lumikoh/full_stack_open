@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { Patient } from "../types"
+import { Diagnosis, Patient } from "../types"
 import { useParams } from "react-router-dom"
 import patientService from "../services/patients"
+import diagnosisService from "../services/diagnoses"
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
@@ -9,6 +10,7 @@ import EntryComponent from "./EntryComponent";
 
 const PatientPage = () => {
     const [patient, setPatient] = useState<Patient>()
+    const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
     const id = useParams().id
 
     useEffect(() => {
@@ -18,6 +20,12 @@ const PatientPage = () => {
             })
         }
     }, [id])
+
+    useEffect(() => {
+        diagnosisService.getAll().then( data => {
+            setDiagnoses(data)
+        })
+    }, [])
 
     if(!patient) {
         return <div></div>
@@ -37,7 +45,7 @@ const PatientPage = () => {
         <h3>entries</h3>
         <div>
             {patient.entries.map( e => (
-                <EntryComponent key={e.id} entry={e} />
+                <EntryComponent key={e.id} entry={e} diagnoses={diagnoses} />
             ))}
         </div>
     </div>
