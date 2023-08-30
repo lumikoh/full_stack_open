@@ -1,16 +1,18 @@
-import { Diagnosis } from "../../types"
-
+import { Diagnosis } from '../../types';
 
 interface DiagnosisProps {
-    value: string,
-    diagnoses: Diagnosis[]
+  value: string;
+  diagnoses: Diagnosis[];
 }
 
-const DiagnosisListPart = ({value, diagnoses}: DiagnosisProps) => {
+const DiagnosisListPart = ({ value, diagnoses }: DiagnosisProps) => {
+  const dg = diagnoses.find((d) => d.code === value);
 
-    const dg = diagnoses.find(d => d.code === value)
+  return (
+    <li>
+      {value} {dg && dg.name}
+    </li>
+  );
+};
 
-    return <li>{value} {dg && (dg.name)}</li>
-}
-
-export default DiagnosisListPart
+export default DiagnosisListPart;

@@ -191,11 +191,11 @@ const toNewDiagnosis = (object: unknown): EntryWithoutId => {
       throw new Error('Incorrect data: a field is missing');
 
     case 'HealthCheck':
-      if ('heathCheckRating' in object) {
+      if ('healthCheckRating' in object) {
         const healthDiagnosis: EntryWithoutId = {
           ...newDiagnosis,
           type: 'HealthCheck',
-          healthCheckRating: parseHealthCheckRating(object.heathCheckRating),
+          healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
         };
         return healthDiagnosis;
       }

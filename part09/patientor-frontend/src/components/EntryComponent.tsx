@@ -1,20 +1,25 @@
-import { Diagnosis, Entry } from "../types"
-import HospitalEntry from "./entries/HospitalEntry";
-import HealthCheckEntry from "./entries/HealthCheckComponent";
-import OccupationalHealthcareEntry from "./entries/OccupationalHealthcareEntry";
-import {assertNever} from "assert-never";
+import { Diagnosis, Entry } from '../types';
+import HospitalComponent from './entries/HospitalComponent';
+import HealthCheckEntry from './entries/HealthCheckComponent';
+import OccupationalHealthcareComponent from './entries/OccupationalHealthcareComponent';
+import { assertNever } from 'assert-never';
 
-const EntryComponent: React.FC<{entry: Entry, diagnoses: Diagnosis[]}> = ({ entry, diagnoses }) => {
-    switch (entry.type) {
-        case "Hospital":
-            return <HospitalEntry entry={entry} diagnoses={diagnoses} />
-        case "HealthCheck":
-            return <HealthCheckEntry entry={entry} diagnoses={diagnoses} />
-        case "OccupationalHealthcare":
-            return <OccupationalHealthcareEntry entry={entry} diagnoses={diagnoses} />
-        default:
-            return assertNever(entry);
-    }
-}
+const EntryComponent: React.FC<{ entry: Entry; diagnoses: Diagnosis[] }> = ({
+  entry,
+  diagnoses,
+}) => {
+  switch (entry.type) {
+    case 'Hospital':
+      return <HospitalComponent entry={entry} diagnoses={diagnoses} />;
+    case 'HealthCheck':
+      return <HealthCheckEntry entry={entry} diagnoses={diagnoses} />;
+    case 'OccupationalHealthcare':
+      return (
+        <OccupationalHealthcareComponent entry={entry} diagnoses={diagnoses} />
+      );
+    default:
+      return assertNever(entry);
+  }
+};
 
-export default EntryComponent
+export default EntryComponent;
