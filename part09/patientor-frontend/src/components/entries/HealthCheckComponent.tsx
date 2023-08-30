@@ -22,7 +22,7 @@ const HealthIcon: React.FC<{rating: HealthCheckRating}> = ({ rating}) => {
 
 const HealthCheckComponent: React.FC<{entry: HealthCheckEntry, diagnoses: Diagnosis[]}> = ({ entry, diagnoses }) => {
     return (
-        <div style={{border: "solid 2px grey", borderRadius: "5px", margin: "4px"}}>
+        <div style={{border: "solid 2px grey", borderRadius: "5px", margin: "4px", padding: "2px"}}>
             <p>{entry.date}<MedicalServicesIcon/></p> <em>{entry.description}</em><br />
             <HealthIcon rating={entry.healthCheckRating}/>
             <p>diagnosis by {entry.specialist}</p>
