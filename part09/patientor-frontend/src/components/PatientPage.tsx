@@ -127,6 +127,7 @@ const PatientPage = () => {
           onSubmit={submitForm}
           type={tab}
           onCancel={() => setTab(TabStatus.Closed)}
+          diagnoses={diagnoses}
         />
       )}
       <h3>entries</h3>

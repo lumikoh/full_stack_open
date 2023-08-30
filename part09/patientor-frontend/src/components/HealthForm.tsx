@@ -1,11 +1,21 @@
-import { TextField, Grid, Button } from '@mui/material';
+import {
+  TextField,
+  Grid,
+  Button,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  FormControl,
+} from '@mui/material';
 import { useState, SyntheticEvent } from 'react';
-import { EntryWithoutId } from '../types';
+import { Diagnosis, EntryWithoutId, HealthCheckRating } from '../types';
 
 interface Props {
   onSubmit: (values: EntryWithoutId) => void;
   type: string;
   onCancel: () => void;
+  diagnoses: Diagnosis[];
 }
 
 const parseCodes = (codes: string): string[] => {
@@ -21,7 +31,89 @@ const toNumber = (rating: string): number => {
   }
 };
 
-const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
+const DateInput: React.FC<{
+  value: string;
+  label: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ value, label, setValue }) => {
+  return (
+    <div
+      style={{
+        border: '1px solid lightgrey',
+        borderRadius: '5px',
+        padding: '6px 10px',
+      }}
+    >
+      <InputLabel>{label}</InputLabel>
+      <Input
+        type="date"
+        fullWidth
+        value={value}
+        onChange={({ target }) => setValue(target.value)}
+      />
+    </div>
+  );
+};
+
+const DiagnosisSelect: React.FC<{
+  diagnoses: Diagnosis[];
+  addDiagnosis: (dg: string) => void;
+  dgCodes: string;
+}> = ({ diagnoses, addDiagnosis, dgCodes }) => {
+  const [text, setText] = useState('');
+
+  return (
+    <>
+      <FormControl fullWidth>
+        <InputLabel>Select diagnoses...</InputLabel>
+        <Select
+          value={text}
+          label="Select diagnoses..."
+          onChange={({ target }) => {
+            setText(target.value);
+            addDiagnosis(target.value);
+          }}
+        >
+          {diagnoses.map((d) => (
+            <MenuItem key={d.code} value={d.code}>
+              {d.code}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <InputLabel style={{ padding: '5px 0px' }}>
+        Selected: {dgCodes}
+      </InputLabel>
+    </>
+  );
+};
+
+const HealthCheckSelect: React.FC<{
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ value, setValue }) => {
+  return (
+    <FormControl fullWidth>
+      <InputLabel>Select health rating...</InputLabel>
+      <Select
+        value={value}
+        label="Select health rating..."
+        onChange={({ target }) => setValue(target.value)}
+      >
+        {Object.keys(HealthCheckRating).map(
+          (h) =>
+            h.length < 3 && (
+              <MenuItem key={h} value={h}>
+                {HealthCheckRating[Number(h)]}
+              </MenuItem>
+            )
+        )}
+      </Select>
+    </FormControl>
+  );
+};
+
+const HealthForm = ({ onSubmit, type, onCancel, diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -72,6 +164,11 @@ const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
     onSubmit(newEntry);
   };
 
+  const addDg = (dg: string) => {
+    const separator = diagnosisCodes === '' ? '' : ', ';
+    setDgCodes(diagnosisCodes + separator + dg);
+  };
+
   return (
     <div
       style={{
@@ -81,7 +178,7 @@ const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
         margin: '20px 0px',
       }}
     >
-      <h3>New HealthCheck entry</h3>
+      <h3>New {type} entry</h3>
       <form onSubmit={createEntry}>
         <TextField
           label="Description"
@@ -89,12 +186,7 @@ const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
           value={description}
           onChange={({ target }) => setDescription(target.value)}
         />
-        <TextField
-          label="Date"
-          fullWidth
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-        />
+        <DateInput value={date} setValue={setDate} label="Date" />
         <TextField
           label="Specialist"
           fullWidth
@@ -102,20 +194,14 @@ const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
           onChange={({ target }) => setSpecialist(target.value)}
         />
         {type === 'HealthCheck' && (
-          <TextField
-            label="Healthcheck rating"
-            fullWidth
-            value={healthCheckRating}
-            onChange={({ target }) => setRating(target.value)}
-          />
+          <HealthCheckSelect value={healthCheckRating} setValue={setRating} />
         )}
         {type === 'Hospital' && (
           <>
-            <TextField
-              label="Discharge date"
-              fullWidth
+            <DateInput
               value={dischargeDate}
-              onChange={({ target }) => setDischargeDate(target.value)}
+              setValue={setDischargeDate}
+              label="Discharge date"
             />
             <TextField
               label="Discharge criteria"
@@ -133,26 +219,22 @@ const HealthForm = ({ onSubmit, type, onCancel }: Props) => {
               value={employerName}
               onChange={({ target }) => setEmployerName(target.value)}
             />
-            <TextField
-              label="Sick leave start date"
-              fullWidth
+            <DateInput
               value={sickLeaveStart}
-              onChange={({ target }) => setSickLeaveStart(target.value)}
+              setValue={setSickLeaveStart}
+              label="Sick leave start date"
             />
-            <TextField
-              label="Sick leave end date"
-              fullWidth
+            <DateInput
               value={sickLeaveEnd}
-              onChange={({ target }) => setSickLeaveEnd(target.value)}
+              setValue={setSickLeaveEnd}
+              label="Sick leave end date"
             />
           </>
         )}
-
-        <TextField
-          label="Diagnosis codes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDgCodes(target.value)}
+        <DiagnosisSelect
+          diagnoses={diagnoses}
+          addDiagnosis={addDg}
+          dgCodes={diagnosisCodes}
         />
         <Grid style={{ marginTop: '10px' }}>
           <Button type="submit" variant="contained">
