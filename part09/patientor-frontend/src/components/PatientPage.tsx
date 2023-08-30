@@ -5,6 +5,7 @@ import patientService from "../services/patients"
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
+import EntryComponent from "./EntryComponent";
 
 const PatientPage = () => {
     const [patient, setPatient] = useState<Patient>()
@@ -33,6 +34,12 @@ const PatientPage = () => {
             <br />
             occupation: {patient.occupation}
         </p>
+        <h3>entries</h3>
+        <div>
+            {patient.entries.map( e => (
+                <EntryComponent key={e.id} entry={e} />
+            ))}
+        </div>
     </div>
 }
 
