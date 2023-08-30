@@ -51,7 +51,6 @@ interface OccupationalHeathcareEntry extends BaseEntry {
   sickLeave?: SickLeave;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type Entry =
   | HospitalEntry
   | OccupationalHeathcareEntry
