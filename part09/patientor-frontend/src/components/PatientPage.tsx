@@ -7,15 +7,23 @@ import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
 import EntryComponent from './EntryComponent';
-import HealthCheckForm from './healthforms/HealthCheckForm';
+import HealthForm from './HealthForm';
 import axios from 'axios';
-import { Alert } from '@mui/material';
+import { Alert, Button } from '@mui/material';
+
+enum TabStatus {
+  Occupational = 'OccupationalHealthcare',
+  Hospital = 'Hospital',
+  HealthCheck = 'HealthCheck',
+  Closed = 'Closed',
+}
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
   const id = useParams().id;
   const [error, setError] = useState('');
+  const [tab, setTab] = useState<TabStatus>(TabStatus.Closed);
 
   useEffect(() => {
     if (typeof id === 'string') {
@@ -40,6 +48,7 @@ const PatientPage = () => {
       .addEntry(patient.id, entry)
       .then((returnedData) => {
         setPatient(returnedData);
+        setTab(TabStatus.Closed);
       })
       .catch((e: unknown) => {
         if (axios.isAxiosError(e)) {
@@ -60,6 +69,7 @@ const PatientPage = () => {
         setTimeout(() => {
           setError('');
         }, 5000);
+        setTab(TabStatus.Closed);
       });
   };
 
@@ -81,7 +91,44 @@ const PatientPage = () => {
         occupation: {patient.occupation}
       </p>
       {error && <Alert severity="error">{error}</Alert>}
-      <HealthCheckForm onSubmit={submitForm} />
+
+      {tab === TabStatus.Closed ? (
+        <div>
+          <Button
+            color="primary"
+            variant="contained"
+            type="button"
+            style={{ margin: '5px' }}
+            onClick={() => setTab(TabStatus.Hospital)}
+          >
+            Hospital
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            type="button"
+            style={{ margin: '5px' }}
+            onClick={() => setTab(TabStatus.Occupational)}
+          >
+            Occupational
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            type="button"
+            style={{ margin: '5px' }}
+            onClick={() => setTab(TabStatus.HealthCheck)}
+          >
+            HealthCheck
+          </Button>
+        </div>
+      ) : (
+        <HealthForm
+          onSubmit={submitForm}
+          type={tab}
+          onCancel={() => setTab(TabStatus.Closed)}
+        />
+      )}
       <h3>entries</h3>
       <div>
         {patient.entries.map((e) => (
