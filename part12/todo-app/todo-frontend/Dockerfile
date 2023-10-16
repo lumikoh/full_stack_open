@@ -4,21 +4,14 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm ci
-
 ENV CI=true
+RUN npm ci
 RUN npm run test
 
-FROM node:16
-
+FROM node:16 AS build-stage
 WORKDIR /usr/src/app
-
-COPY --from=test-stage /usr/src/app /usr/src/app
-
-RUN npm ci
+COPY --from=test-stage /usr/src/app/ /usr/src/app/
 
 ENV REACT_APP_BACKEND_URL=http://localhost:8080/api
-RUN npm run build
 
-RUN npm install -g serve
-CMD ["serve", "build"]
+CMD ["npm", "start"]
