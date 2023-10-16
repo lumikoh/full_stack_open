@@ -136,3 +136,4 @@ part02/phonebook/db.json
 .vscode/
 build/
 .env
+/part12/todo-app/todo-backend/mongo_data
