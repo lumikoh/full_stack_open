@@ -137,3 +137,4 @@ part02/phonebook/db.json
 build/
 .env
 /part12/todo-app/todo-backend/mongo_data
+/part12/todo-app/todo-backend/redis_data
