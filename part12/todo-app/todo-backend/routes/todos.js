@@ -22,7 +22,6 @@ router.post('/', async (req, res) => {
   value = Number(value)
 
   await redis.setAsync('added_todos', value+1)
-  console.log(value)
 
   res.send(todo);
 });
