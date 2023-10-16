@@ -1,0 +1,29 @@
+services:
+  app:
+    image: bloglist-front-dev
+    volumes:
+      - ./frontend/:/usr/src/app
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    environment:
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+
+  server:
+    image: bloglist-back-dev
+    volumes:
+      - ./backend/:/app
+    build:
+      context: ./backend
+      dockerfile: dev.Dockerfile
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - app
+      - server
