@@ -1,0 +1,71 @@
+Script started on 2023-10-16 13:54:52+03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="67" LINES="57"]
+]0;lumi@sylppalaatikko:~/workspace/full_stack_open/part12[?2004h[lumi@sylppalaatikko part12]$ docker container ls
+[?2004lCONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS                     NAMES
+891bf3030f90   mongo     "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:3456->27017/tcp   todo-backend-mongo-1
+]0;lumi@sylppalaatikko:~/workspace/full_stack_open/part12[?2004h[lumi@sylppalaatikko part12]$ docker exec -it 891bf bash
+[?2004l[?2004hroot@891bf3030f90:/# mongosh -u root -p example
+[?2004l]0;mongosh mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000Current Mongosh Log ID:	652d16f0dc5129ceb0106aea
+Connecting to:		[1m[32mmongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1[0m
+Using MongoDB:		7.0.2
+[1m[33mUsing Mongosh[0m:		2.0.1
+
+For mongosh info see: [1mhttps://docs.mongodb.com/mongodb-shell/[0m
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the [1mdisableTelemetry()[0m command.
+
+[1G[0J [1G[1m[33m------[0m
+   [1m[33mThe server generated these startup warnings when booting[0m
+   2023-10-16T10:53:21.008+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2023-10-16T10:53:25.978+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never'
+   2023-10-16T10:53:25.978+00:00: vm.max_map_count is too low
+[1m[33m------[0m
+
+[1G[0Jtest> [7Guse the_database
+switched to db the_database
+[1G[0Jthe_database> [15Gshow collections
+[1mtodos[0m
+[1G[0Jthe_database> [15Gdb.todos.find({})
+[
+  {
+    _id: ObjectId("652c59430d9f15cb9fa1e2e2"),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId("652c59430d9f15cb9fa1e2e3"),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  }
+]
+[1G[0Jthe_database> [15Gdb.todos.insertOne( { text[33mtext[39m: [32m'[39m[32mA[39m[32md[39m[32md[39m[32mi[39m[32mt[39m[32mi[39m[32mo[39m[32mn[39m[32ma[39m[32ml[39m [32mt[39m[32mo[39m[32md[39m[32mo[39m[32m'[39m, d[36mdo[39mdone:[1G[0Jthe_database> db.todos.insertOne( { [33mtext[39m: [32m'Additional todo'[39m, [33mdone[39m:  [1Gtru[33mtrue[39m } );
+{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId("652d1771dc5129ceb0106aeb")
+}
+[1G[0Jthe_database> [15Gdb.todos.find({})
+[
+  {
+    _id: ObjectId("652c59430d9f15cb9fa1e2e2"),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId("652c59430d9f15cb9fa1e2e3"),
+    text: [32m'Learn about containers'[39m,
+    done: [33mfalse[39m
+  },
+  {
+    _id: ObjectId("652d1771dc5129ceb0106aeb"),
+    text: [32m'Additional todo'[39m,
+    done: [33mtrue[39m
+  }
+]
+[1G[0Jthe_database> [15Gexit
+[?2004hroot@891bf3030f90:/# exit
+[?2004lexit
+]0;lumi@sylppalaatikko:~/workspace/full_stack_open/part12[?2004h[lumi@sylppalaatikko part12]$ exit
+[?2004lexit
+
+Script done on 2023-10-16 13:59:47+03:00 [COMMAND_EXIT_CODE="0"]
