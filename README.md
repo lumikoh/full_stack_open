@@ -15,7 +15,7 @@ The course consists of the following parts, the completed parts are marked with 
 - [x] Part  9: TypeScript
 - [ ] Part 10: React Native
 - [ ] Part 11: CI/CD
-- [ ] Part 12: Containers
+- [x] Part 12: Containers
 - [ ] Part 13: Using relational databases
 
 
